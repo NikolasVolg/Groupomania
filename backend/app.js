@@ -1,12 +1,7 @@
 const express = require('express');
 const path = require('path');
 const helmet = require("helmet");
-
-// require('dotenv').config();
-
-
-// const sauceRoutes = require('./routes/sauce');
-// const userRoutes = require('./routes/user');
+const db = require("./models");
 
 const app = express();
 
@@ -20,6 +15,7 @@ app.use((req, res, next) => {
 });
 
 app.use(express.json());
+db.sequelize.sync();
 
 app.use('/images', express.static(path.join(__dirname, 'images')));
 

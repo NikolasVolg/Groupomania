@@ -22,4 +22,5 @@ router.post('/signup', createAccountLimiter, userCtrl.signup);
 router.post('/login', loginAccountLimiter, userCtrl.login);
 router.put('/users/:id', auth, loginAccountLimiter, userCtrl.modify);
 router.delete('/users/:id', auth, userCtrl.delete);
+
 module.exports = router;

@@ -1,63 +1,49 @@
 "use strict";
 
 module.exports = (sequelize, Sequelize) => {
-    const User = sequelize.define(
-        "users", {
-            idUsers: {
+    const Publi = sequelize.define(
+        "publi", {
+            idMessages: {
                 autoIncrement: true,
                 type: Sequelize.INTEGER,
                 allowNull: false,
                 primaryKey: true
             },
-            email: {
-                type: Sequelize.STRING(100),
+            Users_idUsers: {
+                type: Sequelize.INTEGER,
                 allowNull: false, //est-ce que je veux que ce soit vide ?
-                unique: "email_UNIQUE"
+                unique: "Users_idUsers_UNIQUE"
             },
-            lastName: {
-                type: Sequelize.STRING(45),
+            content: {
+                type: Sequelize.STRING(1000),
                 allowNull: false
             },
-            firstName: {
+            image: {
                 type: Sequelize.STRING(45),
-                allowNull: false
-            },
-            password: {
-                type: Sequelize.STRING(45),
-                allowNull: false
-            },
-            bio: {
-                type: Sequelize.STRING(250),
                 allowNull: true
             },
-            isAdmin: {
-                type: Sequelize.BOOLEAN,
-                allowNull: true,
-                default: false
-            },
-        }, {
             sequelize,
-            tableName: "users",
+            tableName: "publication",
             timestamps: false,
             indexes: [{
                     name: "PRIMARY",
                     unique: true,
                     using: "BTREE",
                     fields: [{
-                        name: "idUsers"
+                        name: "idMessages"
                     }],
 
                 },
                 {
-                    name: "email_UNIQUE",
+                    name: "Users_idUsers_UNIQUE",
                     unique: true,
                     using: "BTREE",
                     fields: [{
-                        name: "email"
+                        name: "Users_idUsers"
                     }],
 
                 }
             ]
         });
-    return User;
+    return Publi;
 };

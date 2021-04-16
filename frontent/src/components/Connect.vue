@@ -130,7 +130,12 @@ export default {
     methods: {
             handleSubmit() {
                 this.logged = true
+                console.log(this.logged);
             } 
+    },
+
+    beforeCreate () {
+        
     }
 }
 

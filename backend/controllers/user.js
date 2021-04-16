@@ -1,7 +1,7 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const User = require('../models/user');
 const userSchema = require('../middleware/schema/userSchema');
+const db = require('../models');
 
 exports.signup = async(req, res, next) => {
     try {
@@ -13,7 +13,7 @@ exports.signup = async(req, res, next) => {
                         email: req.body.email,
                         password: hash
                     })
-                    user.save()
+                    db.user.create()
                         .then(() => res.status(201).json({ message: 'Utilisateur créé !' }))
                         .catch(error => res.status(400).json({ error }));
                 })
@@ -30,7 +30,7 @@ exports.login = async(req, res, next) => {
     try {
         const valid = await userSchema.validateAsync(req.body);
         if (valid) {
-            User.findOne({ email: req.body.email })
+            db.user.findOne({ email: req.body.email })
                 .then(user => {
                     if (!user) {
                         return res.status(401).json({ error: 'Utilisateur non trouvé !' });
@@ -57,3 +57,34 @@ exports.login = async(req, res, next) => {
         rres.status(400).json({ error });
     }
 };
+
+exports.modify = async(req, res, next) => {
+
+    try {
+        const userObject = req.file ? {
+            ...JSON.parse(req.body.user),
+            imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+        } : {...req.body };
+
+        // const isValid = await userSchemaControllers.validateAsync(userObject);
+
+        if (isValid) {
+            db.ser.save({ _id: req.params.id }, {...userObject, _id: req.params.id })
+                .then(() => res.status(200).json({ message: 'User modifié !' }))
+                .catch(error => res.status(400).json({ error }));
+
+        } else {
+            throw error('input invalid');
+        }
+
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+
+};
+
+
+
+// exports.delete = (req, res, next) => {
+
+// };
