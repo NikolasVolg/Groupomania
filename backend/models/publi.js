@@ -22,6 +22,7 @@ module.exports = (sequelize, Sequelize) => {
                 type: Sequelize.STRING(45),
                 allowNull: true
             },
+        }, {
             sequelize,
             tableName: "publication",
             timestamps: false,
@@ -44,6 +45,7 @@ module.exports = (sequelize, Sequelize) => {
 
                 }
             ]
-        });
+        }
+    );
     return Publi;
 };

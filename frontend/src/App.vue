@@ -11,7 +11,7 @@
 
 <script>
 
-import Connect from './components/Connect'
+import Connect from './views/Connect'
 import Navbar from './components/Navbar'
 
 

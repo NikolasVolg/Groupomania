@@ -10,7 +10,7 @@
                 </div>
 
                 <div class="infoPerso">
-                    <p>Prénom : {{ firstName }}</p>
+                    <p>Prénom : {{ userId }}</p>
                     <p>Nom : {{ lastName }}</p>
 
                     <p>Email : {{ email }}</p>
@@ -32,19 +32,26 @@
 </template>
 
 <script>
+import { mapState } from "vuex"
+
 export default {
     name: 'Profil',
 
     data () {
         return { 
 
-        firstName: "Niko",
         lastName: "Volg",
         email: "moi@remoi.com",
         password:"********"
 
         }
-    }
+    },
+
+    computed: mapState ({
+            user: state => state.user
+        })           
+        
+    
 }
 
 </script>
