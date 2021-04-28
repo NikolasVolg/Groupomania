@@ -1,7 +1,7 @@
 <template>
   <div id="app">
-    <Navbar></Navbar>
-    <Connect></Connect>
+    <Navbar/>
+    <Connect/>
 
    
     <router-view></router-view>
@@ -30,8 +30,10 @@ export default {
 <style>
 
 body {
+
   margin: 0;
   padding: 0;
+  
 }
 
 </style>

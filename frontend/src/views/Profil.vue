@@ -10,11 +10,11 @@
                 </div>
 
                 <div class="infoPerso">
-                    <p>Prénom : {{ userId }}</p>
-                    <p>Nom : {{ lastName }}</p>
+                    <p>Prénom : {{ user.firstName }}</p>
+                    <p>Nom : {{ user.lastName }}</p>
 
-                    <p>Email : {{ email }}</p>
-                    <p>Mot de passe : {{ password }}</p>
+                    <p>Email : {{ user.email }}</p>
+
                 </div>
 
                 <div>
@@ -35,23 +35,20 @@
 import { mapState } from "vuex"
 
 export default {
+
     name: 'Profil',
 
     data () {
-        return { 
-
-        lastName: "Volg",
-        email: "moi@remoi.com",
-        password:"********"
-
+        return {
+ 
         }
     },
 
     computed: mapState ({
             user: state => state.user
         })           
-        
     
+
 }
 
 </script>

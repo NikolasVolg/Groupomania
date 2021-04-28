@@ -50,7 +50,10 @@ exports.login = async(req, res, next) => {
                                 return res.status(401).json({ error: 'Mot de passe ou email incorrect !' });
                             }
                             res.status(200).json({
+                                firstName: user.firstName,
+                                lastName: user.lastName,
                                 userId: user.idUsers,
+                                email: req.body.email,
                                 token: jwt.sign({ userId: user.idUsers },
                                     'RANDOM_TOKEN_SECRET', { expiresIn: '24h' }
                                 )

@@ -41,7 +41,6 @@
 <script>
 //import { mapState } from "../store/index"
 
-
 export default {
     name: "Login",
 
@@ -67,33 +66,32 @@ export default {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify(contact)
-                };
+            };
 
-                fetch("http://localhost:3000/api/auth/login", requestOptions)
-                    .then(response => { 
-                        if (response.ok) {
+            fetch("http://localhost:3000/api/auth/login", requestOptions)
+                .then(response => { 
+                    if (response.ok) {
                 
-                            return response.json()
+                        return response.json()
                             
-                        } else {
-                            Promise.reject(response.status);
-                        }
-                    })
-                    .then((user) => {
+                    } else {
+                        Promise.reject(response.status);
+                    }
+                })
+                .then((user) => {
                         
-                        this.$store.dispatch("login", user);
-                        console.log(this.$store);
+                    this.$store.dispatch("login", user);
+                    console.log(this.$store);
                         
-                    })
+                })
                     
-                    .catch((error) => {
+                .catch((error) => {
 
-                        alert(error)
+                    alert(error)
 
-                    });
+                });
         }
     },
-
 }
 
 </script>
