@@ -3,7 +3,7 @@ const router = express.Router();
 const userCtrl = require('../controllers/user');
 //const rateLimit = require("express-rate-limit");
 
-//const auth = require('../middleware/auth');
+const auth = require('../middleware/auth');
 
 // const createAccountLimiter = rateLimit({
 //     windowMs: 60 * 60 * 1000, // fenêtre d'une heure
@@ -20,7 +20,7 @@ const userCtrl = require('../controllers/user');
 
 router.post('/signup', userCtrl.signup);
 router.post('/login', userCtrl.login);
-//router.put('/users/:id', auth, loginAccountLimiter, userCtrl.modify);
+router.put('/users/:id', auth, userCtrl.modifyUser);
 //router.delete('/users/:id', auth, userCtrl.delete);
 
 module.exports = router;

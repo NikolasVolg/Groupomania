@@ -3,6 +3,8 @@ const path = require('path');
 const helmet = require("helmet");
 const db = require("./models");
 
+require('dotenv').config();
+
 const app = express();
 const userRoutes = require('./routes/users');
 
@@ -20,7 +22,7 @@ db.sequelize.sync();
 
 app.use('/images', express.static(path.join(__dirname, 'images')));
 
-// app.use('/api/sauces', sauceRoutes);
 app.use('/api/auth', userRoutes);
+// app.use('/api/publi', publiRoutes);
 
 module.exports = app;
