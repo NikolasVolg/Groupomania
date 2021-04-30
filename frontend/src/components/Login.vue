@@ -60,7 +60,6 @@ export default {
                 password: this.password
             };
 
-            console.log(contact);
 
             const requestOptions = {
                     method: "POST",

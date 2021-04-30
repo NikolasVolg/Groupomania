@@ -77,17 +77,17 @@ exports.modifyUser = async(req, res, next) => {
 
     try {
 
-        const userObject = JSON.parse(req.body.user);
-        const isValid = await userSchemaControllers.validateAsync(userObject);
+        const userObject = req.body;
+        const isValid = await userSchema.validateAsync(userObject);
 
         if (isValid) {
 
             const userObject = req.file ? {
-                ...JSON.parse(req.body.user),
+                ...req.body,
                 imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
             } : {...req.body };
 
-            db.user.save({ _id: req.params.id }, {...userObject, _id: req.params.id })
+            db.user.create({ _id: req.params.id }, {...userObject, _id: req.params.id })
                 .then(() => res.status(200).json({ message: 'User modifié !' }))
                 .catch(error => res.status(400).json({ error }));
 
@@ -100,7 +100,6 @@ exports.modifyUser = async(req, res, next) => {
     }
 
 };
-
 
 
 // exports.delete = (req, res, next) => {

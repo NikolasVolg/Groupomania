@@ -5,24 +5,17 @@
             <div class="profil">
 
                 <div class="avatar">
-                    <b-avatar src="https://placekitten.com/300/300" size="200px"></b-avatar>
-                    <button class="modifier" to="/modifyProfil">Modifier</button>
+                    <p>plouf</p>
+                   <!-- input type file -->
                 </div>
 
                 <div class="infoPerso">
-                    <p>Prénom : {{ user.firstName }}</p>
-                    <p>Nom : {{ user.lastName }}</p>
-
-                    <p>Email : {{ user.email }}</p>
+                    <!-- input nom prénom email mdp -->
 
                 </div>
 
                 <div>
-                    <label for="story"></label>
-
-                    <textarea id="story" name="story" cols="33">
-                    It was a dark and stormy night...
-                    </textarea>
+                    <!-- bouton de sauvegarde -->
                 </div>
     
             </div>
@@ -32,11 +25,11 @@
 </template>
 
 <script>
-import { mapState } from "vuex"
+//import { mapState } from "vuex"
 
 export default {
 
-    name: 'Profil',
+    name: 'ModifyProfil',
 
     data () {
         return {
@@ -44,9 +37,9 @@ export default {
         }
     },
 
-    computed: mapState ({
-            user: state => state.user
-    })           
+    // computed: mapState ({
+    //         user: state => state.user
+    // })           
     
 }
 
