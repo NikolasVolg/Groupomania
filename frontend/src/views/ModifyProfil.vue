@@ -5,7 +5,16 @@
             <div class="profil">
 
                 <div class="avatar">
-                    <p>plouf</p>
+                    <form>
+                        <div>
+                            <label for="file">Sélectionnez votre fichier</label>
+                            <input type="file" id="file" name="file" multiple>
+                        </div>
+
+                        <div>
+                            <button>Ajouter</button>
+                        </div>
+                    </form>
                    <!-- input type file -->
                 </div>
 

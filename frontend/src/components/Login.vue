@@ -80,7 +80,7 @@ export default {
                 .then((user) => {
                         
                     this.$store.dispatch("login", user);
-                    console.log(this.$store);
+                    console.log(user); //undefined
                         
                 })
                     

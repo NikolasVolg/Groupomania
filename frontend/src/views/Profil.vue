@@ -21,7 +21,7 @@
                     <label for="story"></label>
 
                     <textarea id="story" name="story" cols="33">
-                    It was a dark and stormy night...
+                        It was a dark and stormy night...
                     </textarea>
                 </div>
     

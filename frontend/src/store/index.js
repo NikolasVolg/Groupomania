@@ -18,7 +18,7 @@ export default new Vuex.Store({
             state.logged = isLogged;
         },
 
-        setUser(state, user) {
+        async setUser(state, user) {
             state.user = user;
         }
 

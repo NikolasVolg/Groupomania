@@ -1,14 +1,17 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const userSchema = require('../middleware/schema/userSchema');
+const passwordSchema = require('../middleware/schema/passwordSchema')
 const db = require('../models');
 
 require('dotenv').config();
 
 exports.signup = async(req, res, next) => {
     try {
+        const validPassword = passwordSchema.validate(req.body.password);
         const valid = await userSchema.validateAsync(req.body);
-        if (valid) {
+
+        if (valid && validPassword) {
             bcrypt.hash(req.body.password, 10)
                 .then(hash => {
                     const user = {
@@ -57,7 +60,7 @@ exports.login = async(req, res, next) => {
                                 userId: user.idUsers,
                                 email: req.body.email,
                                 token: jwt.sign({ userId: user.idUsers },
-                                    'process.env.SECRET_KEY', { expiresIn: '24h' }
+                                    process.env.SECRET_KEY, { expiresIn: '24h' }
                                 )
                             });
                         })
@@ -77,29 +80,48 @@ exports.modifyUser = async(req, res, next) => {
 
     try {
 
-        const userObject = req.body;
-        const isValid = await userSchema.validateAsync(userObject);
+        const findUser = await db.user.findOne({ where: { _id: req.params.id } });
 
-        if (isValid) {
+        if (findUser) {
 
-            const userObject = req.file ? {
-                ...req.body,
-                imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
-            } : {...req.body };
+            const userObject = req.body;
+            const isValid = await userSchema.validateAsync(userObject);
 
-            db.user.create({ _id: req.params.id }, {...userObject, _id: req.params.id })
+            if (isValid) {
+
+                const userObject = req.file ? {
+                    ...req.body,
+                    imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+                } : {...req.body };
+
+
+
+                db.user.update({
+
+
+                    },
+
+                    {...userObject, _id: req.params.id })
+
                 .then(() => res.status(200).json({ message: 'User modifié !' }))
-                .catch(error => res.status(400).json({ error }));
+                    .catch(error => res.status(400).json({ error }));
+
+            } else {
+                throw error('input invalid');
+            };
 
         } else {
-            throw error('input invalid');
-        }
+            res.status(404).json({ message: 'Utilisateur non trouvé' });
+        };
+
 
     } catch (error) {
         res.status(500).json({ message: error.message });
-    }
+    };
 
 };
+
+//il faut une ou je modifie que le texte et je modifie l'image et le texte
 
 
 // exports.delete = (req, res, next) => {
