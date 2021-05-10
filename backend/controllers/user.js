@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken');
 const userSchema = require('../middleware/schema/userSchema');
 const passwordSchema = require('../middleware/schema/passwordSchema')
 const db = require('../models');
+//const fs = require('fs');
 
 require('dotenv').config();
 
@@ -67,44 +68,46 @@ exports.login = async(req, res, next) => {
                         .catch(error => res.status(500).json({ error }));
                 })
                 .catch(error => res.status(500).json({ error }));
+
         } else {
             throw error('input invalid');
         }
 
-    } catch {
+    } catch (error) {
         res.status(400).json({ error });
     }
 };
+
+//si du temps séparer modif user et modif password !!!!
 
 exports.modifyUser = async(req, res, next) => {
 
     try {
 
-        const findUser = await db.user.findOne({ where: { _id: req.params.id } });
+        const findUser = await db.user.findOne({ where: { idUsers: req.params.id } });
 
         if (findUser) {
 
-            const userObject = req.body;
-            const isValid = await userSchema.validateAsync(userObject);
+            const isValid = await userSchema.validateAsync(req.body);
 
             if (isValid) {
 
+
                 const userObject = req.file ? {
-                    ...req.body,
+                    firstName: req.body.firstName,
+                    lastName: req.body.lastName,
+                    email: req.body.email,
                     imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
-                } : {...req.body };
+                } : {
+                    firstName: req.body.firstName,
+                    lastName: req.body.lastName,
+                    email: req.body.email,
+                };
 
+                findUser.update({...userObject })
+                    .then(() => res.status(200).json({ message: 'User modifié !' }))
+                    .catch(error => res.status(500).json({ message: error.message }));
 
-
-                db.user.update({
-
-
-                    },
-
-                    {...userObject, _id: req.params.id })
-
-                .then(() => res.status(200).json({ message: 'User modifié !' }))
-                    .catch(error => res.status(400).json({ error }));
 
             } else {
                 throw error('input invalid');
@@ -116,14 +119,34 @@ exports.modifyUser = async(req, res, next) => {
 
 
     } catch (error) {
+
         res.status(500).json({ message: error.message });
+
     };
 
 };
 
-//il faut une ou je modifie que le texte et je modifie l'image et le texte
 
 
-// exports.delete = (req, res, next) => {
+// exports.deleteUser = async(req, res, next) => {
+
+//     try {
+//         db.user.findOne({ where: { idUsers: req.params.id } })
+
+//         .then(user => {
+//                 const filename = user.imageUrl.split('/images/')[1];
+//                 fs.unlink(`images/${filename}`, () => {
+//                     User.deleteOne({ idUsers: req.params.id })
+//                         .then(() => res.status(200).json({ message: 'Sauce supprimé !' }))
+//                         .catch(error => res.status(400).json({ message: error.message }));
+//                 });
+//             })
+//             .catch(error => res.status(501).json({ message: error.message }));
+
+
+//     } catch (error) {
+//         res.status(500).json({ message: error.message });
+//     }
+
 
 // };

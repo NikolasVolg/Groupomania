@@ -1,7 +1,6 @@
 <template>
   <div id="app">
     <Navbar/>
-    <Connect/>
 
    
     <router-view></router-view>
@@ -11,7 +10,6 @@
 
 <script>
 
-import Connect from './views/Connect'
 import Navbar from './components/Navbar'
 
 
@@ -19,8 +17,7 @@ export default {
 
   name: 'App',
   components: {
-    Navbar,
-    Connect
+    Navbar
   }
   
 }

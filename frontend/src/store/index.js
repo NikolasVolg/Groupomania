@@ -18,17 +18,19 @@ export default new Vuex.Store({
             state.logged = isLogged;
         },
 
-        async setUser(state, user) {
+        setUser(state, user) {
             state.user = user;
         }
 
     },
 
     actions: {
+
         login(context, user) {
             context.commit("setLogged", true);
             context.commit("setUser", user);
         }
+
     },
 
     modules: {

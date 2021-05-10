@@ -46,7 +46,7 @@
                         label="Mot de passe"
                         label-for="password"
                         invalid-feedback="Password is required"
-                        description="Minimum 8 caractères, une majuscule et 1 chiffres">
+                        description="Minimum 8 caractères, une majuscule, une minuscule et 1 chiffres. Symbole et espace interdit.">
 
                         <b-form-input
                             id="password"
@@ -90,8 +90,6 @@ export default {
                 password: this.password
             };
 
-            console.log(contact);
-
                 const requestOptions = {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
@@ -110,9 +108,9 @@ export default {
                             Promise.reject(response.status);
                         }
                     })
-                    .then((data) => {
+                    .then(() => {
                         
-                        console.log(data);
+
                         this.logged = true
                         
                     });

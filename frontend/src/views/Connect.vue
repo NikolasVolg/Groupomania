@@ -1,6 +1,6 @@
 <template>
 <div>
-    <b-container class="">
+    <b-container>
         <b-card class="cardConnex" title="Informations de connexion" header-tag="nav">
 
             <b-tabs card>
@@ -27,6 +27,9 @@
 </template>
 
 <script>
+
+//import { mapState } from "../store/index"
+
 import Login from "../components/Login"
 import Signup from "../components/Signup"
 
@@ -37,7 +40,7 @@ export default {
     components: {
         Login,
         Signup
-    }
+    },
      
 }
 
@@ -46,7 +49,9 @@ export default {
 <style>
 
 .cardConnex {
+
     margin-top: 2rem;
+    
 }
 
 </style>

@@ -1,15 +1,17 @@
 <template>
     <div>
 
-        <b-jumbotron class="container-fluid" header="Profil">
-            <div class="profil">
+        <b-container
+        class="justify-content-md-center profil mt-5"
+        style="max-width: 20rem;">
 
-                <div class="avatar">
-                    <b-avatar src="https://placekitten.com/300/300" size="200px"></b-avatar>
-                    <button class="modifier" to="/modifyProfil">Modifier</button>
+
+                <div class="avatar  mx-auto">
+                    <b-avatar text="GM" size="200px"></b-avatar>
+                    
                 </div>
 
-                <div class="infoPerso">
+                <div class="infoPerso  mx-auto">
                     <p>Prénom : {{ user.firstName }}</p>
                     <p>Nom : {{ user.lastName }}</p>
 
@@ -17,50 +19,43 @@
 
                 </div>
 
-                <div>
-                    <label for="story"></label>
-
-                    <textarea id="story" name="story" cols="33">
-                        It was a dark and stormy night...
-                    </textarea>
-                </div>
+                <button class="modifier  mx-auto" to="/modifyProfil">Modifier</button>
     
-            </div>
-        </b-jumbotron>
+    
+        </b-container>
 
     </div>
 </template>
 
 <script>
-import { mapState } from "vuex"
+
+import { mapState } from "vuex";
 
 export default {
 
     name: 'Profil',
 
-    data () {
-        return {
- 
-        }
-    },
-
     computed: mapState ({
             user: state => state.user
     })           
-    
-}
+};
 
 </script>
 
 <style>
+body {
+    background-image: url("../../../Groupomania-images/icon.png");
+    background-repeat: no-repeat;
+    background-position: center top 50px;
+}
 
 .profil {
     display: flex;
-}
-
-.avatar {
-    display: flex;
     flex-direction: column;
+    padding: 20px;
+    justify-content: center;
+    border: 1px solid black;
+    border-radius: 10px;
 }
 
 .modifier {
@@ -76,7 +71,7 @@ export default {
 
 .infoPerso {
     margin: 0 50px 0 50px;
-    border: 1px solid #fff;
+    border: 1px solid black;
     border-radius: 15px;
     padding: 15px;
 }
@@ -84,5 +79,9 @@ export default {
 .infoPerso p {
     font-size: 1.2rem;
 }
+
+    
+
+
 
 </style>
