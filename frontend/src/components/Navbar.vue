@@ -1,7 +1,7 @@
 <template>
     <div>
   <b-navbar toggleable="lg" type="dark" class="colorBar">
-    <b-navbar-brand to="/home">Groupomania</b-navbar-brand>
+    <b-navbar-brand to="/home"><img src="../../../Groupomania-images/icon-left-font-monochrome-white.svg" class="logoNavbar" alt="logo groupomania"></b-navbar-brand>
 
     <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
 
@@ -22,7 +22,7 @@
             <em>Utilisateur</em>
           </template>
 
-          <b-dropdown-item to="/profil">Profil<b-avatar class="avatarSm" text="GM" size="sm"></b-avatar>
+          <b-dropdown-item to="/profil">Profil<b-avatar class="avatarNavbar" text="GM" size="sm"></b-avatar>
             
           </b-dropdown-item>
 
@@ -39,7 +39,7 @@
 
 export default {
 
-    name: 'Navbar',
+  name: 'Navbar',
 
 }
 
@@ -47,11 +47,15 @@ export default {
 
 <style>
 
+.logoNavbar {
+  max-width: 50%;
+}
+
 .searchBar {
   margin-right: 2rem;
 }
 
-.avatarSm {
+.avatarNavbar {
   margin-left: 3rem;
 }
 

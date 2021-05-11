@@ -27,7 +27,9 @@ export default {
 <style>
 
 body {
-
+  background-image: url("../../Groupomania-images/icon.png");
+  background-repeat: no-repeat;
+  background-position: center top 50px;
   margin: 0;
   padding: 0;
   

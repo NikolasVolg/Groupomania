@@ -2,11 +2,11 @@
     <div>
 
         <b-container
-        class="justify-content-md-center profil mt-5"
+        class="justify-content-md-center mt-5 profil"
         style="max-width: 20rem;">
 
 
-                <div class="avatar  mx-auto">
+                <div class="avatar mx-auto">
                     <b-avatar text="GM" size="200px"></b-avatar>
                     
                 </div>
@@ -19,7 +19,8 @@
 
                 </div>
 
-                <button class="modifier  mx-auto" to="/modifyProfil">Modifier</button>
+                <button to="/modifyProfil" class="modifier mx-auto">Modifier</button>
+                <button class="delete mx-auto">Supprimer mon compte</button>
     
     
         </b-container>
@@ -43,10 +44,9 @@ export default {
 </script>
 
 <style>
-body {
-    background-image: url("../../../Groupomania-images/icon.png");
-    background-repeat: no-repeat;
-    background-position: center top 50px;
+
+.avatar {
+    margin-bottom: 20px;
 }
 
 .profil {
@@ -61,10 +61,21 @@ body {
 .modifier {
     width: 200px;
     height: 40px;
-    margin-top: 15px;
+    margin-top: 30px;
     border-radius: 30px;
     border: 0;
     background-color: #091f43;
+    color: #fff;
+    font-weight: bold;
+}
+
+.delete {
+    width: 200px;
+    height: 40px;
+    margin-top: 30px;
+    border-radius: 30px;
+    border: 0;
+    background-color: #d1515a;
     color: #fff;
     font-weight: bold;
 }
