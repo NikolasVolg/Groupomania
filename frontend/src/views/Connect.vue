@@ -1,8 +1,8 @@
 <template>
 <div>
-    <b-container>
+    <b-container v-if="!isLogged">
 
-        <b-col  lg="8" class="mx-auto">
+        <b-col lg="8" class="mx-auto">
             <b-card class="cardConnex" title="Informations de connexion" header-tag="nav">
 
                 <b-tabs card>
@@ -37,6 +37,8 @@
 import Login from "../components/Login"
 import Signup from "../components/Signup"
 
+import { mapState } from "vuex"
+
 export default {
 
     name:'Connect',
@@ -45,7 +47,10 @@ export default {
         Login,
         Signup
     },
-     
+    computed: mapState ({
+            isLogged: state => state.isLogged
+    }),
+
 }
 
 </script>

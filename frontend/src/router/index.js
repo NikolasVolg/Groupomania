@@ -5,18 +5,18 @@ import Profil from '../views/Profil.vue';
 import ModifyProfil from '../views/ModifyProfil.vue';
 import Connect from '../views/Connect.vue';
 import store from '../store/index';
+//import { mapState } from "vuex";
 
 Vue.use(VueRouter);
 
 const routes = [{
-        path: '/home',
+        path: '/',
         name: 'Home',
         component: Home,
         meta: {
             required: true
         }
     },
-
     {
         path: '/profil',
         name: 'Profil',
@@ -54,17 +54,19 @@ router.beforeEach((to, from, next) => {
         next()
         return
     }
+    if (store.state.user) {
+        if (sessionStorage.getItem("token")) {
+            //fetch()route userToken)
+            next("/connect")
+            return
 
-    if (to.meta.required) {
-        next()
+        } else {
+            next()
+        }
+    } else {
+        next("/connect")
         return
-
-    } else if (store.user.token) {
-
-        console.log(store.user.token);
     }
-    next()
-
 });
 
 export default router;

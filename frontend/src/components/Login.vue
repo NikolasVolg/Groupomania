@@ -39,7 +39,6 @@
 </template>
 
 <script>
-//import { mapState } from "../store/index"
 
 export default {
     name: "Login",
@@ -80,7 +79,7 @@ export default {
                 .then((user) => {
                         
                     this.$store.dispatch("login", user);
-                    console.log(user);
+                    this.$router.push("/");
                         
                 })
                     

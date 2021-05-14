@@ -17,7 +17,7 @@ const auth = require('../middleware/auth');
 //     message: "Trop de connexions créés à partir de cette IP, merci de réessayer dans une heure"
 // });
 
-
+router.get('/users/token', auth, userCtrl.tokenUser);
 router.post('/signup', userCtrl.signup);
 router.post('/login', userCtrl.login);
 router.put('/users/:id', auth, userCtrl.modifyUser);

@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken');
 const userSchema = require('../middleware/schema/userSchema');
 const passwordSchema = require('../middleware/schema/passwordSchema')
 const db = require('../models');
+const User = db.user;
 //const fs = require('fs');
 
 require('dotenv').config();
@@ -21,7 +22,7 @@ exports.signup = async(req, res, next) => {
                         email: req.body.email,
                         password: hash
                     }
-                    db.user.create(user)
+                    User.create(user)
                         .then(() => res.status(201).json({ message: 'Utilisateur créé !' }))
                         .catch(error => res.status(400).json({ error }));
                 })
@@ -40,7 +41,7 @@ exports.login = async(req, res, next) => {
         const valid = await userSchema.validateAsync(req.body);
 
         if (valid) {
-            db.user.findOne({
+            User.findOne({
 
                     where: {
                         email: req.body.email,
@@ -55,14 +56,16 @@ exports.login = async(req, res, next) => {
                             if (!valid) {
                                 return res.status(401).json({ error: 'Mot de passe ou email incorrect !' });
                             }
+                            const tokenUser = jwt.sign({ userId: user.idUsers },
+                                process.env.SECRET_KEY, { expiresIn: '24h' });
+
                             res.status(200).json({
                                 firstName: user.firstName,
                                 lastName: user.lastName,
                                 userId: user.idUsers,
                                 email: req.body.email,
-                                token: jwt.sign({ userId: user.idUsers },
-                                    process.env.SECRET_KEY, { expiresIn: '24h' }
-                                )
+                                token: tokenUser
+
                             });
                         })
                         .catch(error => res.status(500).json({ error }));
@@ -78,13 +81,45 @@ exports.login = async(req, res, next) => {
     }
 };
 
+exports.tokenUser = (req, res, next) => {
+
+    const tokenUserId = req.decodedToken.userId; //renvoie uniquement userId
+
+    //aller chercher les info dans la BDD
+    db.user.findOne({
+
+            where: {
+                idUsers: tokenUserId,
+            }
+
+        })
+        .then(user => {
+            //si pas d'user, c'est moche
+            if (!user) {
+                return res.status(401).json({ error: 'Utilisateur non trouvé !' });
+
+            } else { //si user renvoie des infos route login
+
+                res.status(200).json({
+                    firstName: user.firstName,
+                    lastName: user.lastName,
+                    userId: user.idUsers,
+                    email: user.email,
+                    token: decodedToken,
+                })
+            };
+        })
+        .catch(error => res.status(500).json({ message: error.message }));
+
+};
+
 //si du temps séparer modif user et modif password !!!!
 
 exports.modifyUser = async(req, res, next) => {
 
     try {
 
-        const findUser = await db.user.findOne({ where: { idUsers: req.params.id } });
+        const findUser = await User.findOne({ where: { idUsers: req.params.id } });
 
         if (findUser) {
 
@@ -131,7 +166,7 @@ exports.modifyUser = async(req, res, next) => {
 // exports.deleteUser = async(req, res, next) => {
 
 //     try {
-//         db.user.findOne({ where: { idUsers: req.params.id } })
+//         User.findOne({ where: { idUsers: req.params.id } })
 
 //         .then(user => {
 //                 const filename = user.imageUrl.split('/images/')[1];

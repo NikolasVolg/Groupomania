@@ -6,10 +6,8 @@ Vue.use(Vuex);
 export default new Vuex.Store({
     state: {
         user: null,
-        sessionStorage: "",
         isAdmin: false,
         logged: false,
-
     },
 
     mutations: {
@@ -29,6 +27,7 @@ export default new Vuex.Store({
         login(context, user) {
             context.commit("setLogged", true);
             context.commit("setUser", user);
+            sessionStorage.setItem("token", user);
         }
 
     },
