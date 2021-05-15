@@ -5,7 +5,7 @@ import Profil from '../views/Profil.vue';
 import ModifyProfil from '../views/ModifyProfil.vue';
 import Connect from '../views/Connect.vue';
 import store from '../store/index';
-//import { mapState } from "vuex";
+
 
 Vue.use(VueRouter);
 
@@ -48,6 +48,22 @@ const router = new VueRouter({
     routes
 });
 
+const fetchUser = fetch("http://localhost:3000/api/auth/users/token")
+    .then(response => {
+        if (response.ok) {
+
+            return response.json();
+
+        } else {
+            Promise.reject(response.status);
+        }
+    })
+    .then(dataUser => {
+        sessionStorage.setItem("datasUser", dataUser);
+    });
+
+console.log(fetchUser);
+
 router.beforeEach((to, from, next) => {
 
     if (!to.meta.required) {
@@ -55,14 +71,7 @@ router.beforeEach((to, from, next) => {
         return
     }
     if (store.state.user) {
-        if (sessionStorage.getItem("token")) {
-            //fetch()route userToken)
-            next("/connect")
-            return
-
-        } else {
-            next()
-        }
+        return
     } else {
         next("/connect")
         return

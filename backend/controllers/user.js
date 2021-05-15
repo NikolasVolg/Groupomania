@@ -3,12 +3,12 @@ const jwt = require('jsonwebtoken');
 const userSchema = require('../middleware/schema/userSchema');
 const passwordSchema = require('../middleware/schema/passwordSchema')
 const db = require('../models');
-const User = db.user;
+const dbUser = db.user;
 //const fs = require('fs');
 
 require('dotenv').config();
 
-exports.signup = async(req, res, next) => {
+exports.signup = async(req, res) => {
     try {
         const validPassword = passwordSchema.validate(req.body.password);
         const valid = await userSchema.validateAsync(req.body);
@@ -22,7 +22,7 @@ exports.signup = async(req, res, next) => {
                         email: req.body.email,
                         password: hash
                     }
-                    User.create(user)
+                    dbUser.create(user)
                         .then(() => res.status(201).json({ message: 'Utilisateur créé !' }))
                         .catch(error => res.status(400).json({ error }));
                 })
@@ -35,13 +35,14 @@ exports.signup = async(req, res, next) => {
     };
 };
 
-exports.login = async(req, res, next) => {
+exports.login = async(req, res) => {
+
     try {
 
         const valid = await userSchema.validateAsync(req.body);
 
         if (valid) {
-            User.findOne({
+            dbUser.findOne({
 
                     where: {
                         email: req.body.email,
@@ -81,41 +82,53 @@ exports.login = async(req, res, next) => {
     }
 };
 
-exports.tokenUser = (req, res, next) => {
 
-    const tokenUserId = req.decodedToken.userId; //renvoie uniquement userId
 
-    //aller chercher les info dans la BDD
-    db.user.findOne({
+exports.tokenUser = async(req, res) => {
 
-            where: {
-                idUsers: tokenUserId,
-            }
+    try {
 
-        })
-        .then(user => {
-            //si pas d'user, c'est moche
-            if (!user) {
-                return res.status(401).json({ error: 'Utilisateur non trouvé !' });
+        const tokenUserId = await req.decodedToken.userId; //renvoie uniquement userId
 
-            } else { //si user renvoie des infos route login
+        if (tokenUserId) {
 
-                res.status(200).json({
-                    firstName: user.firstName,
-                    lastName: user.lastName,
-                    userId: user.idUsers,
-                    email: user.email,
-                    token: decodedToken,
+            //aller chercher les info dans la BDD
+            dbUser.findOne({
+
+                    where: {
+                        idUsers: tokenUserId,
+                    }
+
                 })
-            };
-        })
-        .catch(error => res.status(500).json({ message: error.message }));
+                .then(user => {
+                    //si pas d'user, c'est moche
+                    if (!user) {
+                        return res.status(401).json({ error: 'Utilisateur non trouvé !' });
 
+                    } else { //si user trouvé, on renvoie des infos de la BDD
+
+                        res.status(200).json({
+                            firstName: user.firstName,
+                            lastName: user.lastName,
+                            userId: user.idUsers,
+                            email: user.email,
+                        })
+                    };
+                })
+                .catch(error => res.status(500).json({ message: error.message }));
+
+        } else {
+            throw error('input invalid');
+        }
+
+    } catch (error) {
+        res.status(400).json({ error });
+    }
 };
 
 //si du temps séparer modif user et modif password !!!!
 
-exports.modifyUser = async(req, res, next) => {
+exports.modifyUser = async(req, res) => {
 
     try {
 
@@ -126,7 +139,6 @@ exports.modifyUser = async(req, res, next) => {
             const isValid = await userSchema.validateAsync(req.body);
 
             if (isValid) {
-
 
                 const userObject = req.file ? {
                     firstName: req.body.firstName,
