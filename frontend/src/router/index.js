@@ -39,7 +39,6 @@ const routes = [{
         component: Connect
     }
 
-
 ];
 
 const router = new VueRouter({
@@ -48,33 +47,37 @@ const router = new VueRouter({
     routes
 });
 
-const fetchUser = fetch("http://localhost:3000/api/auth/users/token")
-    .then(response => {
-        if (response.ok) {
-
-            return response.json();
-
-        } else {
-            Promise.reject(response.status);
-        }
-    })
-    .then(dataUser => {
-        sessionStorage.setItem("datasUser", dataUser);
-    });
-
-console.log(fetchUser);
-
 router.beforeEach((to, from, next) => {
 
     if (!to.meta.required) {
         next()
         return
     }
-    if (store.state.user) {
-        return
-    } else {
-        next("/connect")
-        return
+    if (to.meta.required) {
+
+        if (store.state.user) {
+
+            fetch("http://localhost:3000/api/auth/users/token")
+                .then(response => {
+                    if (response.ok) {
+
+                        return response.json();
+
+                    } else {
+                        Promise.reject(response.status);
+                    }
+                })
+                .then(dataUser => {
+                    sessionStorage.setItem("datasUser", dataUser);
+                });
+
+            return
+
+        } else {
+
+            next("/connect")
+            return
+        }
     }
 });
 

@@ -1,6 +1,5 @@
 <template>
   
-
         <form ref="form" @submit.stop.prevent="logIn">
 
                 <b-form-group           
