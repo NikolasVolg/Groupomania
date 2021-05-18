@@ -7,6 +7,7 @@ require('dotenv').config();
 
 const app = express();
 const userRoutes = require('./routes/users');
+const publiRoutes = require('./routes/publication');
 
 app.use(helmet());
 
@@ -23,6 +24,6 @@ db.sequelize.sync();
 app.use('/images', express.static(path.join(__dirname, 'images')));
 
 app.use('/api/auth', userRoutes);
-// app.use('/api/publi', publiRoutes);
+app.use('/api/publi', publiRoutes);
 
 module.exports = app;

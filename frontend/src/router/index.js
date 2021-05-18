@@ -69,9 +69,12 @@ router.beforeEach((to, from, next) => {
                 })
                 .then(dataUser => {
                     sessionStorage.setItem("datasUser", dataUser);
+                    next();
+                })
+                .catch((e) => {
+                    next("/connect");
+                    console.log(e);
                 });
-
-            return
 
         } else {
 

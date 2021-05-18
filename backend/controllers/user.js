@@ -9,7 +9,9 @@ const dbUser = db.user;
 require('dotenv').config();
 
 exports.signup = async(req, res) => {
+
     try {
+
         const validPassword = passwordSchema.validate(req.body.password);
         const valid = await userSchema.validateAsync(req.body);
 
@@ -21,7 +23,7 @@ exports.signup = async(req, res) => {
                         lastName: req.body.lastName,
                         email: req.body.email,
                         password: hash
-                    }
+                    };
                     dbUser.create(user)
                         .then(() => res.status(201).json({ message: 'Utilisateur créé !' }))
                         .catch(error => res.status(400).json({ error }));
@@ -30,9 +32,13 @@ exports.signup = async(req, res) => {
         } else {
             throw error('input invalid');
         };
+
     } catch (error) {
+
         res.status(400).json({ error });
+
     };
+
 };
 
 exports.login = async(req, res) => {
@@ -132,7 +138,7 @@ exports.modifyUser = async(req, res) => {
 
     try {
 
-        const findUser = await User.findOne({ where: { idUsers: req.params.id } });
+        const findUser = await dbUser.findOne({ where: { idUsers: req.params.id } });
 
         if (findUser) {
 
