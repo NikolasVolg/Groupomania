@@ -2,7 +2,7 @@
 
 module.exports = (sequelize, Sequelize) => {
     const Publi = sequelize.define(
-        "publi", {
+        "publication", {
             idMessages: {
                 autoIncrement: true,
                 type: Sequelize.INTEGER,
