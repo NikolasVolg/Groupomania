@@ -5,18 +5,28 @@ const dbUser = db.user;
 
 exports.publiAll = (req, res) => {
 
-    dbPubli.findAll({
-            where: {
-                publication: req.body.publication
-            }
-        })
-        .then(publi => {
-            res.status(200).json({
-                publi: publi
-            })
-        })
-        .catch(error => res.status(500).json({ message: error.message }));
+    const fields = req.query.fields;
+    const order = req.query.order;
 
+    dbPubli.findAll({
+            order: [(order != null) ? order.split(":") : ["idMessages", "DESC"]],
+            attributes: (fields !== "*" && fields != null) ? fields.split(",") : null,
+
+            include: [{
+                model: dbUser,
+                as: "users",
+                attributes: ["firstName", "lastName"]
+            }],
+
+        })
+        .then((message) => {
+            if (message) {
+                res.status(200).json(message)
+            } else {
+                res.status(404).json({ message: "publications non trouvées" })
+            };
+        })
+        .catch((error) => res.status(500).json({ message: "Dommage : " + error.message }));
 };
 
 exports.publiCreate = async(req, res) => {
@@ -34,7 +44,7 @@ exports.publiCreate = async(req, res) => {
 
             console.log(publication);
 
-            dbPubli.create(publication) //"message": "Cannot read property 'create' of undefined"
+            dbPubli.create(publication)
                 .then(() => res.status(201).json({ message: 'Publication créé !' }))
                 .catch(error => res.status(400).json({ error }));
 

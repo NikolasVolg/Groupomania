@@ -16,11 +16,36 @@ const sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
     },
 });
 
-
 db.Sequelize = Sequelize;
 db.sequelize = sequelize;
+
 db.user = require("./user.js")(sequelize, Sequelize);
 db.publication = require("./publi.js")(sequelize, Sequelize);
 //db.comment = require("./comment.js")(sequelize, Sequelize);
+
+//User <--> Publication
+
+db.user.hasMany(db.publication, {
+    foreignKey: "usersId",
+    as: "publication"
+});
+
+
+db.publication.belongsTo(db.user, {
+    foreignKey: "usersId",
+    as: "users",
+});
+
+
+// db.user.hasMany(db.publication, {
+//     foreignKey: "idUsers",
+//     as: "publication",
+// });
+
+// db.publication.belongsTo(db.user, {
+//     foreignKey: "Users_idUsers",
+//     as: "users",
+// });
+
 
 module.exports = db;
