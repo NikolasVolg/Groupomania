@@ -21,7 +21,10 @@ exports.publiAll = (req, res) => {
         })
         .then((message) => {
             if (message) {
-                res.status(200).json(message)
+                res.status(200).json({
+                    firstName: user.firstName,
+                    lastName: user.lastName,
+                })
             } else {
                 res.status(404).json({ message: "publications non trouvées" })
             };
@@ -32,7 +35,7 @@ exports.publiAll = (req, res) => {
 exports.publiCreate = async(req, res) => {
     try {
 
-        const tokenUserId = await req.decodedToken.userId;
+        const tokenUserId = req.decodedToken.userId;
         const valid = await publiSchema.validateAsync(req.body);
 
         if (valid && tokenUserId) {
@@ -41,8 +44,6 @@ exports.publiCreate = async(req, res) => {
                 content: req.body.content,
                 Users_idUsers: tokenUserId
             };
-
-            console.log(publication);
 
             dbPubli.create(publication)
                 .then(() => res.status(201).json({ message: 'Publication créé !' }))
@@ -74,5 +75,4 @@ exports.publiDelete = (req, res) => {
                 })
             }
         })
-
 };

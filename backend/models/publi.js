@@ -12,7 +12,7 @@ module.exports = (sequelize, Sequelize) => {
             Users_idUsers: {
                 type: Sequelize.INTEGER,
                 allowNull: false, //est-ce que je veux que ce soit vide ?
-                unique: "Users_idUsers_UNIQUE"
+                //unique: "Users_idUsers_UNIQUE"
             },
             content: {
                 type: Sequelize.STRING(1000),
@@ -36,11 +36,11 @@ module.exports = (sequelize, Sequelize) => {
 
                 },
                 {
-                    name: "Users_idUsers_UNIQUE",
-                    unique: true,
+                    name: "Users_idUsers",
+                    //unique: true,
                     using: "BTREE",
                     fields: [{
-                        name: "Users_idUsers"
+                        name: "idUsers"
                     }],
 
                 }

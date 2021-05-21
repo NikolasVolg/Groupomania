@@ -11,7 +11,7 @@ module.exports = (sequelize, Sequelize) => {
             },
             email: {
                 type: Sequelize.STRING(100),
-                allowNull: false, //est-ce que je veux que ce soit vide ?
+                allowNull: false,
                 unique: "email_UNIQUE"
             },
             lastName: {

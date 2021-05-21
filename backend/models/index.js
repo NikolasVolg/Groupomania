@@ -23,29 +23,16 @@ db.user = require("./user.js")(sequelize, Sequelize);
 db.publication = require("./publi.js")(sequelize, Sequelize);
 //db.comment = require("./comment.js")(sequelize, Sequelize);
 
-//User <--> Publication
+//Jointure User <--> Publication
 
 db.user.hasMany(db.publication, {
-    foreignKey: "usersId",
+    foreignKey: "Users_idUsers",
     as: "publication"
 });
 
-
 db.publication.belongsTo(db.user, {
-    foreignKey: "usersId",
+    foreignKey: "Users_idUsers",
     as: "users",
 });
-
-
-// db.user.hasMany(db.publication, {
-//     foreignKey: "idUsers",
-//     as: "publication",
-// });
-
-// db.publication.belongsTo(db.user, {
-//     foreignKey: "Users_idUsers",
-//     as: "users",
-// });
-
 
 module.exports = db;

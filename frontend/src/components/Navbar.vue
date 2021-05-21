@@ -26,7 +26,7 @@
             
           </b-dropdown-item>
 
-          <b-dropdown-item href="#">Se déconnecter</b-dropdown-item>
+          <b-dropdown-item @click="deconnect">Se déconnecter</b-dropdown-item>
         </b-nav-item-dropdown>
       </b-navbar-nav>
     </b-collapse>
@@ -40,6 +40,13 @@
 export default {
 
   name: 'Navbar',
+
+  methods: {
+    deconnect() {
+      sessionStorage.removeItem("token");
+      this.$router.push("/connect");
+    }
+  }
 
 }
 

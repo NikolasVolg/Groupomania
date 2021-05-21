@@ -13,6 +13,7 @@ module.exports = (req, res, next) => {
             throw 'Invalid user ID';
         } else {
             req.decodedToken = decodedToken;
+            req.token = token;
             next();
         }
 

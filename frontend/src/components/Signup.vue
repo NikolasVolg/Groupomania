@@ -101,7 +101,7 @@ export default {
                     .then(response => { 
                         
                         if (response.ok) {
-                            console.log(response.json()); 
+                            
                             return response.json() 
 
                         } else {
@@ -109,11 +109,9 @@ export default {
                         }
                     })
                     .then(() => {
+                        window.alert("vous êtes bien enregistré. Vous pouvez vous connecté.");
                         
-
-                        this.logged = true
-                        
-                    });
+                    })
         }
     }
 }

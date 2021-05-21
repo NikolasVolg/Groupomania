@@ -27,7 +27,7 @@ export default new Vuex.Store({
         login(context, user) {
             context.commit("setLogged", true);
             context.commit("setUser", user);
-            sessionStorage.setItem("token", user);
+            sessionStorage.setItem("token", user.token);
         }
 
     },

@@ -1,7 +1,7 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const userSchema = require('../middleware/schema/userSchema');
-const passwordSchema = require('../middleware/schema/passwordSchema')
+//const passwordSchema = require('../middleware/schema/passwordSchema')
 const db = require('../models');
 const dbUser = db.user;
 //const fs = require('fs');
@@ -12,10 +12,10 @@ exports.signup = async(req, res) => {
 
     try {
 
-        const validPassword = passwordSchema.validate(req.body.password);
+        //const validPassword = await passwordSchema.validate(req.body.password);
         const valid = await userSchema.validateAsync(req.body);
 
-        if (valid && validPassword) {
+        if (valid) {
             bcrypt.hash(req.body.password, 10)
                 .then(hash => {
                     const user = {
@@ -35,7 +35,7 @@ exports.signup = async(req, res) => {
 
     } catch (error) {
 
-        res.status(400).json({ error });
+        res.status(500).json({ message: error.message });
 
     };
 
@@ -90,11 +90,11 @@ exports.login = async(req, res) => {
 
 
 
-exports.tokenUser = async(req, res) => {
+exports.tokenUser = (req, res) => {
 
     try {
 
-        const tokenUserId = await req.decodedToken.userId; //renvoie uniquement userId
+        const tokenUserId = req.decodedToken.userId; //renvoie uniquement userId
 
         if (tokenUserId) {
 
@@ -118,6 +118,7 @@ exports.tokenUser = async(req, res) => {
                             lastName: user.lastName,
                             userId: user.idUsers,
                             email: user.email,
+                            token: req.token
                         })
                     };
                 })
@@ -134,72 +135,70 @@ exports.tokenUser = async(req, res) => {
 
 //si du temps séparer modif user et modif password !!!!
 
-exports.modifyUser = async(req, res) => {
-
-    try {
-
-        const findUser = await dbUser.findOne({ where: { idUsers: req.params.id } });
-
-        if (findUser) {
-
-            const isValid = await userSchema.validateAsync(req.body);
-
-            if (isValid) {
-
-                const userObject = req.file ? {
-                    firstName: req.body.firstName,
-                    lastName: req.body.lastName,
-                    email: req.body.email,
-                    imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
-                } : {
-                    firstName: req.body.firstName,
-                    lastName: req.body.lastName,
-                    email: req.body.email,
-                };
-
-                findUser.update({...userObject })
-                    .then(() => res.status(200).json({ message: 'User modifié !' }))
-                    .catch(error => res.status(500).json({ message: error.message }));
-
-
-            } else {
-                throw error('input invalid');
-            };
-
-        } else {
-            res.status(404).json({ message: 'Utilisateur non trouvé' });
-        };
-
-
-    } catch (error) {
-
-        res.status(500).json({ message: error.message });
-
-    };
-
-};
-
-
-
-// exports.deleteUser = async(req, res, next) => {
+// exports.modifyUser = async(req, res) => {
 
 //     try {
-//         User.findOne({ where: { idUsers: req.params.id } })
 
-//         .then(user => {
-//                 const filename = user.imageUrl.split('/images/')[1];
-//                 fs.unlink(`images/${filename}`, () => {
-//                     User.deleteOne({ idUsers: req.params.id })
-//                         .then(() => res.status(200).json({ message: 'Sauce supprimé !' }))
-//                         .catch(error => res.status(400).json({ message: error.message }));
-//                 });
-//             })
-//             .catch(error => res.status(501).json({ message: error.message }));
+//         const findUser = await dbUser.findOne({ where: { idUsers: req.params.id } });
+
+//         if (findUser) {
+
+//             const isValid = await userSchema.validateAsync(req.body);
+
+//             if (isValid) {
+
+//                 const userObject = req.file ? {
+//                     firstName: req.body.firstName,
+//                     lastName: req.body.lastName,
+//                     email: req.body.email,
+//                     imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+//                 } : {
+//                     firstName: req.body.firstName,
+//                     lastName: req.body.lastName,
+//                     email: req.body.email,
+//                 };
+
+//                 findUser.update({...userObject })
+//                     .then(() => res.status(200).json({ message: 'User modifié !' }))
+//                     .catch(error => res.status(500).json({ message: error.message }));
+
+
+//             } else {
+//                 throw error('input invalid');
+//             };
+
+//         } else {
+//             res.status(404).json({ message: 'Utilisateur non trouvé' });
+//         };
 
 
 //     } catch (error) {
-//         res.status(500).json({ message: error.message });
-//     }
 
+//         res.status(500).json({ message: error.message });
+
+//     };
 
 // };
+
+
+
+exports.deleteUser = (req, res) => {
+
+    const tokenUserId = req.decodedToken.userId;
+
+    dbUser.findOne({ where: { idUsers: tokenUserId } })
+
+    .then(() => {
+            // const filename = user.imageUrl.split('/images/')[1];
+            // fs.unlink(`images/${filename}`, () => {
+            dbUser.destroy({
+                    where: { idUsers: tokenUserId },
+                })
+                .then(() => res.status(200).json({ message: 'Utilisateur supprimé !' }))
+                .catch(error => res.status(400).json({ message: error.message }));
+            //});
+        })
+        .catch(error => res.status(501).json({ message: error.message }));
+
+
+};

@@ -19,8 +19,8 @@
 
                 </div>
 
-                <button to="/modifyProfil" class="modifier mx-auto">Modifier</button>
-                <button class="delete mx-auto">Supprimer mon compte</button>
+                <!-- <button to="/modifyProfil" class="modifier mx-auto">Modifier</button> -->
+                <button class="delete mx-auto" @click="supprimer">Supprimer mon compte</button>
     
     
         </b-container>
@@ -38,7 +38,38 @@ export default {
 
     computed: mapState ({
             user: state => state.user
-    })           
+    }),
+    
+    methods: {
+        supprimer() {
+
+            const token = sessionStorage.getItem("token");
+
+            const options = {
+                method: 'DELETE',
+                headers: { authorization: `bearer ${token}` }
+            };
+
+            fetch("http://localhost:3000/api/auth/users/deleteUser", options)
+            .then(response => {
+                    if (response.ok) {
+
+                        return response.json();
+
+                    } else {
+                        Promise.reject(response.status);
+                    }
+                })
+                .then(() => {
+                    this.$router.push("connect")
+                })
+                .catch((e) => {
+                    this.$router.push("/connect");
+                    console.error(e);
+                });
+        }
+    }
+    
 };
 
 </script>

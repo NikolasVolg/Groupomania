@@ -55,9 +55,16 @@ router.beforeEach((to, from, next) => {
     }
     if (to.meta.required) {
 
-        if (store.state.user) {
+        const token = sessionStorage.getItem("token");
 
-            fetch("http://localhost:3000/api/auth/users/token")
+        if (token) {
+
+            const options = {
+                method: 'GET',
+                headers: { authorization: `Bearer ${token}` }
+            };
+
+            fetch("http://localhost:3000/api/auth/users/token", options)
                 .then(response => {
                     if (response.ok) {
 
@@ -67,13 +74,13 @@ router.beforeEach((to, from, next) => {
                         Promise.reject(response.status);
                     }
                 })
-                .then(dataUser => {
-                    sessionStorage.setItem("datasUser", dataUser);
+                .then(user => {
+                    store.dispatch("login", user);
                     next();
                 })
                 .catch((e) => {
                     next("/connect");
-                    console.log(e);
+                    console.error(e);
                 });
 
         } else {
