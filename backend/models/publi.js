@@ -13,6 +13,10 @@ module.exports = (sequelize, Sequelize) => {
                 type: Sequelize.INTEGER,
                 allowNull: false, //est-ce que je veux que ce soit vide ?
                 //unique: "Users_idUsers_UNIQUE"
+                references: {
+                    model: "users",
+                    key: "idUsers",
+                },
             },
             content: {
                 type: Sequelize.STRING(1000),
