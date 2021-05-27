@@ -52,21 +52,21 @@ export default {
 
             fetch("http://localhost:3000/api/auth/users/deleteUser", options)
             .then(response => {
-                    if (response.ok) {
+                if (response.ok) {
 
-                        return response.json();
+                    return response.json();
 
-                    } else {
-                        Promise.reject(response.status);
-                    }
-                })
-                .then(() => {
-                    this.$router.push("connect")
-                })
-                .catch((e) => {
-                    this.$router.push("/connect");
-                    console.error(e);
-                });
+                } else {
+                    Promise.reject(response.status);
+                }
+            })
+            .then(() => {
+                this.$router.push("connect")
+            })
+            .catch((e) => {
+                this.$router.push("/connect");
+                console.error(e);
+            });
         }
     }
     

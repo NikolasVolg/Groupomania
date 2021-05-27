@@ -22,6 +22,7 @@
                     invalid-feedback="Password is required">
 
                     <b-form-input
+                        type="password"
                         id="passwordInput"
                         placeholder="Entrez votre mot de passe"
                         v-model="password"
@@ -90,5 +91,4 @@ export default {
         }
     },
 }
-
 </script>

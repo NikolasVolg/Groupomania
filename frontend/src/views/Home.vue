@@ -7,7 +7,7 @@
               id="textarea-state"
               v-model="content"
               :state="content.length >= 5"
-              placeholder="Entrer minimum 5 caractères"
+              placeholder="Minimum 5 caractères"
               rows="3">
             </b-form-textarea>
 
@@ -22,26 +22,30 @@
        
       </b-col>
 
-      <!-- <b-col  col md="8" lg="6" xl="4" fluid="md" class="justify-content-md-center mt-3 publication mx-auto">
+      <b-col v-for="post in posts" :key="post.id"  col md="8" lg="6" xl="4" fluid="md" class="justify-content-md-center mt-3 publication mx-auto">
+
+        <div class="d-flex justify-content-end">
+          <button class="trash_button ">
+            <b-icon class="trash_icon" icon="trash-fill" aria-hidden="true"></b-icon>
+          </button>
+        </div>
+        
         <div>
           <div class="autor">
-            <b-avatar class="avatarSm" text="GM" size="md"></b-avatar><h4>{{ firstName }} {{ lastName }}</h4>
-          </div>
-          
+            <b-avatar class="avatarSm" text="GM" size="md"></b-avatar><h4>{{ post.users.firstName }} {{ post.users.lastName }}</h4>
+          </div>          
 
-          <p>{{ content }}</p>
+          <p>{{ post.content }}</p>
 
-          <b-img src="https://picsum.photos/300/300/?image=41" fluid-grow alt=""></b-img>
-
+          <!-- <b-img src="https://picsum.photos/300/300/?image=41" fluid-grow alt=""></b-img> -->
         </div>
 
-        <div class="comment">
+        <!-- <div class="comment">
           <div class="autor"><b-avatar class="avatarSm" text="GM" size="sm"></b-avatar><h6>{{ firstName }} {{ lastName }}</h6></div>
           
           <p>{{ content }}</p>
-        </div>
-      </b-col> -->
-
+        </div> -->
+      </b-col>
 
   </div>
 </template>
@@ -54,13 +58,15 @@ export default {
 
   data() {
       return {
-        content: ''
+        content: '',
+        posts: []
       }
     },
 
   computed: mapState ({
             user: state => state.user
     }),
+  
 
   methods: {
     createPost() {
@@ -81,31 +87,65 @@ export default {
       fetch("http://localhost:3000/api/publi/publiCreate", requestOptions)
       .then(response => { 
         if (response.ok) {
-    
-            return response.json()
-                
+            return response.json()         
         } else {
             Promise.reject(response.status);
-        }
+        }        
+      })
+      .then(newPost => {
+        this.posts.unshift(newPost)
+        console.log(newPost);
       })
       .catch((error) => {
 
         alert(error)
 
       });
+    },
+  },
 
-    }
+  mounted() {
+
+    const token = sessionStorage.getItem("token");
+
+    if (token) {
+
+      const options = {
+          headers: { authorization: `Bearer ${token}` }
+      };
+
+      fetch("http://localhost:3000/api/publi/publications", options)
+        .then(response => { 
+          if (response.ok) {
+
+            return response.json();
+
+          } else {
+              Promise.reject(response.status);
+          }
+        })
+        .then(publications => {              
+          
+          publications.forEach(objet => {
+            this.posts.push(objet)
+          })
+          
+        })
+        .catch((error) => {
+          alert(error)
+        });
+    } 
+    
   }
 
 }
 </script>
 
 <style>
+
 .publication {
-
-background-color: rgba(9, 31, 67, 0.1);
-padding: 5px;
-
+  background-color: rgba(9, 31, 67, 0.1);
+  padding: 5px;
 }
 
 .autor {
@@ -131,6 +171,7 @@ h4, h6 {
 p {
   margin-left: 10px;
 }
+
 /* BOUTON */
 .submit {
     width: 100px;
@@ -142,6 +183,7 @@ p {
     color: #fff;
     font-weight: bold;
 }
+
 /* Input file */
 .label-file {
     border: 1px solid #091f43;
@@ -152,6 +194,7 @@ p {
     color: #091f43;
     font-weight: bold;
 }
+
 .label-file:hover {
     color: #fff;
     background: #091f43;
@@ -159,6 +202,17 @@ p {
 
 .input-file {
     display: none;
+}
+
+/* Trash */
+
+.trash_button {
+  border: none;
+  background: none;
+}
+
+.trash_icon {
+  color: #dc3545;
 }
 
 </style>

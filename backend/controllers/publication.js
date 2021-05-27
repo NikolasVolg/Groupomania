@@ -5,26 +5,27 @@ const dbUser = db.user;
 
 exports.publiAll = (req, res) => {
 
-    const fields = req.query.fields;
-    const order = req.query.order;
+    //const $idPublication = req.query.idPublication;
 
     dbPubli.findAll({
-            order: [(order != null) ? order.split(":") : ["idMessages", "DESC"]],
-            attributes: (fields !== "*" && fields != null) ? fields.split(",") : null,
 
-            include: [{
+            order: [
+                ["idPublication", "DESC"]
+            ],
+
+            include: {
                 model: dbUser,
                 as: "users",
                 attributes: ["firstName", "lastName"]
-            }],
+            },
 
         })
         .then((message) => {
             if (message) {
-                res.status(200).json({
-                    firstName: user.firstName,
-                    lastName: user.lastName,
-                })
+                res.status(200).json(message)
+
+                console.log(message);
+
             } else {
                 res.status(404).json({ message: "publications non trouvées" })
             };
@@ -33,6 +34,7 @@ exports.publiAll = (req, res) => {
 };
 
 exports.publiCreate = async(req, res) => {
+
     try {
 
         const tokenUserId = req.decodedToken.userId;
@@ -46,7 +48,30 @@ exports.publiCreate = async(req, res) => {
             };
 
             dbPubli.create(publication)
-                .then(() => res.status(201).json({ message: 'Publication créé !' }))
+                .then((createPost) => {
+
+                    dbUser.findOne({
+                            where: { idUsers: tokenUserId },
+                            attributes: ["firstName", "lastName"]
+                        })
+                        .then((user) => {
+
+                            const post = {
+                                idPublication: createPost.idPublication,
+                                Users_idUsers: createPost.Users_idUsers,
+                                content: createPost.content,
+                                image: createPost.image,
+                                users: {
+                                    firstName: user.firstName,
+                                    lastName: user.lastName
+                                }
+                            };
+
+                            return res.status(201).json(post)
+                        })
+                        .catch(error => res.status(404).json({ error }));
+
+                })
                 .catch(error => res.status(400).json({ error }));
 
         } else {

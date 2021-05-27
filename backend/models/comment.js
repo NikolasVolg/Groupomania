@@ -1,13 +1,17 @@
 "use strict";
 
 module.exports = (sequelize, Sequelize) => {
-    const Publi = sequelize.define(
-        "publication", {
-            idPublication: {
+    const Comment = sequelize.define(
+        "comment", {
+            idComments: {
                 autoIncrement: true,
                 type: Sequelize.INTEGER,
                 allowNull: false,
                 primaryKey: true
+            },
+            content: {
+                type: Sequelize.TEXT,
+                allowNull: false
             },
             Users_idUsers: {
                 type: Sequelize.INTEGER,
@@ -17,26 +21,32 @@ module.exports = (sequelize, Sequelize) => {
                     key: "idUsers",
                 },
             },
-            content: {
-                type: Sequelize.TEXT,
-                allowNull: false
-            },
-            image: {
-                type: Sequelize.STRING(45),
-                allowNull: true
+            Publication_idPublication: {
+                type: Sequelize.INTEGER,
+                allowNull: false,
+                references: {
+                    model: "publication",
+                    key: "idPublication",
+                },
             },
         }, {
             sequelize,
-            tableName: "publication",
+            tableName: "comment",
             timestamps: false,
             // indexes: [{
             //         name: "PRIMARY",
             //         unique: true,
             //         using: "BTREE",
             //         fields: [{
-            //             name: "idPublication"
+            //             name: "idComments"
             //         }],
-
+            //     },
+            //     {
+            //         name: "FK_Publication_idPublication",
+            //         using: "BTREE",
+            //         fields: [{
+            //             name: "Publication_idPublication"
+            //         }],
             //     },
             //     {
             //         name: "FK_Users_idUsers",
@@ -44,10 +54,9 @@ module.exports = (sequelize, Sequelize) => {
             //         fields: [{
             //             name: "Users_idUsers"
             //         }],
-
             //     }
             // ]
         }
     );
-    return Publi;
+    return Comment;
 };

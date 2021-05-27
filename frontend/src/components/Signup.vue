@@ -43,6 +43,7 @@
                     </b-form-group>
 
                     <b-form-group
+                        type="password"
                         label="Mot de passe"
                         label-for="password"
                         invalid-feedback="Password is required"

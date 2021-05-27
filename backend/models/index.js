@@ -19,9 +19,9 @@ const sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
 db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 
-db.user = require("./user.js")(sequelize, Sequelize);
+db.user = require("./users.js")(sequelize, Sequelize);
 db.publication = require("./publi.js")(sequelize, Sequelize);
-//db.comment = require("./comment.js")(sequelize, Sequelize);
+db.comment = require("./comment.js")(sequelize, Sequelize);
 
 //Jointure User <--> Publication
 
@@ -34,5 +34,11 @@ db.publication.belongsTo(db.user, {
     foreignKey: "Users_idUsers",
     as: "users",
 });
+
+//Jointure User <--> Comment
+
+
+//Jointure Comment <--> Publication
+
 
 module.exports = db;
