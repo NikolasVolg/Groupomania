@@ -24,8 +24,6 @@ exports.publiAll = (req, res) => {
             if (message) {
                 res.status(200).json(message)
 
-                console.log(message);
-
             } else {
                 res.status(404).json({ message: "publications non trouvées" })
             };
@@ -44,7 +42,8 @@ exports.publiCreate = async(req, res) => {
 
             const publication = {
                 content: req.body.content,
-                Users_idUsers: tokenUserId
+                Users_idUsers: tokenUserId,
+                image: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
             };
 
             dbPubli.create(publication)
@@ -86,18 +85,75 @@ exports.publiCreate = async(req, res) => {
 exports.publiDelete = (req, res) => {
 
     const tokenUserId = req.decodedToken.userId;
-    const findPubli = req.idMessages;
 
-    dbUser.findOne({
-            where: { idUsers: tokenUserId }
+    let idMessage = req.params.id;
+
+    dbPubli.findOne({
+            where: { Users_idUsers: dbPubli }
         })
-        .then(user => {
-            if (!user) {
-                return res.status(401).json({ error: 'Utilisateur non trouvé' });
-            } else {
-                dbPubli.destroy({
-                    where: { idMessages: findPubli }
-                })
-            }
+        .then((userPost) => {
+            return userPost;
         })
+        .catch((err) => {
+            res.status(500).send({ message: err.message });
+        });
+
+    console.log("ConsoleLog findPubli: " + userPost);
+
+    console.log("ConsoleLog : " + idMessage);
+
+    if (idMessage <= 0) {
+        return res.status(404).json({ error: 'Publication non trouvé' });
+    } else if (tokenUserId === userPost) {
+
+        dbPubli.destroy({
+                where: {
+                    idPublication: idMessage,
+                    Users_idUsers: tokenUserId
+                }
+            })
+            .then(() => {
+                res.status(200).send({ message: "Publication supprimée !" });
+            })
+            .catch((err) => {
+                res.status(500).send({ message: err.message });
+            });
+
+    } else {
+        return res.status(401).json({ error: 'No Match Id' });
+    }
+
 };
+
+// dbUser.findOne({
+//     where: { idUsers: tokenUserId }
+// })
+// .then(user => {
+
+//     console.log("plouf" + user);
+
+//     if (!user) {
+//         return res.status(401).json({ error: 'Utilisateur non trouvé' });
+//     }
+//     return dbPubli.findOne({
+//         where: { idPublication: publication },
+//     });
+// })
+// .then((post) => {
+
+//     if (post.Users_idUsers === tokenUserId || user.isAdmin == 1) {
+
+//         return post.destroy({ where: { idPublication: findPost } });
+//     } else {
+//         throw res.status(400).send({ error });
+//     }
+// })
+// .then(() => {
+//     res.status(200).send({ message: "Publication supprimée !" });
+// })
+
+// .catch((err) => {
+// res.status(500).send({
+//     message: err.message
+// });
+// });

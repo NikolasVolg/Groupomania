@@ -100,11 +100,9 @@ exports.tokenUser = (req, res) => {
 
             //aller chercher les info dans la BDD
             dbUser.findOne({
-
                     where: {
                         idUsers: tokenUserId,
                     }
-
                 })
                 .then(user => {
                     //si pas d'user, c'est moche
@@ -118,7 +116,8 @@ exports.tokenUser = (req, res) => {
                             lastName: user.lastName,
                             userId: user.idUsers,
                             email: user.email,
-                            token: req.token
+                            token: req.token,
+                            isAdmin: user.isAdmin
                         })
                     };
                 })
@@ -199,6 +198,4 @@ exports.deleteUser = (req, res) => {
             //});
         })
         .catch(error => res.status(501).json({ message: error.message }));
-
-
 };

@@ -3,8 +3,8 @@ const router = express.Router();
 const publicationCtrl = require('../controllers/publication');
 const auth = require('../middleware/auth');
 
-router.get('/publications', auth, publicationCtrl.publiAll);
+router.get('/', auth, publicationCtrl.publiAll);
 router.post('/publiCreate', auth, publicationCtrl.publiCreate);
-router.delete('/publiDelete', auth, publicationCtrl.publiDelete);
+router.delete('/:id', auth, publicationCtrl.publiDelete);
 
 module.exports = router;

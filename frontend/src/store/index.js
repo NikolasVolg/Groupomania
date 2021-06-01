@@ -6,7 +6,7 @@ Vue.use(Vuex);
 export default new Vuex.Store({
     state: {
         user: null,
-        isAdmin: false,
+        isAdmin: 0,
         logged: false,
     },
 
@@ -18,6 +18,10 @@ export default new Vuex.Store({
 
         setUser(state, user) {
             state.user = user;
+        },
+
+        setAdmin(state, isAdmin) {
+            state.isAdmin = isAdmin;
         }
 
     },
@@ -27,6 +31,7 @@ export default new Vuex.Store({
         login(context, user) {
             context.commit("setLogged", true);
             context.commit("setUser", user);
+            context.commit("setAdmin", 1);
             sessionStorage.setItem("token", user.token);
         }
 

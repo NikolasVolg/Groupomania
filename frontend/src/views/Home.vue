@@ -11,10 +11,9 @@
               rows="3">
             </b-form-textarea>
 
-  
             <div class="d-flex justify-content-end">
               <label for="file" class="label-file">Choisir une image</label>
-              <input id="file" type="file" class="input-file" accept="image/png, image/jpeg">
+              <input @change="uploadImage()" id="file" type="file" class="input-file" accept="image/png, image/jpeg, image/bmp, image/gif" ref="file">
               <button class="submit" type="submit">Publier</button>
             </div>
 
@@ -24,7 +23,7 @@
 
       <b-col v-for="post in posts" :key="post.id"  col md="8" lg="6" xl="4" fluid="md" class="justify-content-md-center mt-3 publication mx-auto">
 
-        <div class="d-flex justify-content-end">
+        <div class="d-flex justify-content-end" v-if="user || isAdmin">
           <button class="trash_button ">
             <b-icon class="trash_icon" icon="trash-fill" aria-hidden="true"></b-icon>
           </button>
@@ -33,7 +32,7 @@
         <div>
           <div class="autor">
             <b-avatar class="avatarSm" text="GM" size="md"></b-avatar><h4>{{ post.users.firstName }} {{ post.users.lastName }}</h4>
-          </div>          
+          </div>
 
           <p>{{ post.content }}</p>
 
@@ -59,7 +58,8 @@ export default {
   data() {
       return {
         content: '',
-        posts: []
+        posts: [],
+        file: ''
       }
     },
 
@@ -69,19 +69,34 @@ export default {
   
 
   methods: {
+    uploadImage() {
+      
+      let file = this.$refs.file.files[0];
+
+      this.file = file   
+
+
+    },
+
     createPost() {
 
-      const data = {
-        content: this.content
-      };
+      let data = new FormData();
 
+      data.append('image', this.file);
+      data.append('content', this.content);
+
+      console.log(data);
+
+      // const data = {
+      //   content: this.content
+      // };
 
       const token = sessionStorage.getItem("token");
 
       const requestOptions = {
                     method: "POST",
-                    headers: { "Content-Type": "application/json", authorization: `Bearer ${token}` },
-                    body: JSON.stringify(data)
+                    headers: { "Content-Type": "multipart/formdata", authorization: `Bearer ${token}` },
+                    body: data
                 };
 
       fetch("http://localhost:3000/api/publi/publiCreate", requestOptions)
@@ -114,7 +129,7 @@ export default {
           headers: { authorization: `Bearer ${token}` }
       };
 
-      fetch("http://localhost:3000/api/publi/publications", options)
+      fetch("http://localhost:3000/api/publi/", options)
         .then(response => { 
           if (response.ok) {
 

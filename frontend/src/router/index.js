@@ -2,7 +2,7 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 import Home from '../views/Home.vue';
 import Profil from '../views/Profil.vue';
-import ModifyProfil from '../views/ModifyProfil.vue';
+//import ModifyProfil from '../views/ModifyProfil.vue';
 import Connect from '../views/Connect.vue';
 import store from '../store/index';
 
@@ -25,14 +25,14 @@ const routes = [{
             required: true
         }
     },
-    {
-        path: '/modifyProfil',
-        name: 'ModifyProfil',
-        component: ModifyProfil,
-        meta: {
-            required: true
-        }
-    },
+    // {
+    //     path: '/modifyProfil',
+    //     name: 'ModifyProfil',
+    //     component: ModifyProfil,
+    //     meta: {
+    //         required: true
+    //     }
+    // },
     {
         path: '/connect',
         name: 'Connect',
@@ -84,7 +84,6 @@ router.beforeEach((to, from, next) => {
                 });
 
         } else {
-
             next("/connect")
             return
         }
