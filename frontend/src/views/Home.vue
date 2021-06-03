@@ -7,31 +7,37 @@
               id="textarea-state"
               v-model="content"
               :state="content.length >= 5"
-              placeholder="Minimum 5 caractères"
+              placeholder="Ecrivez quelque chose. Minimum 5 caractères"
               rows="3">
             </b-form-textarea>
 
             <div class="d-flex justify-content-end">
+              <div
+              v-if="previewImage"
+              class="imagePreviewWrapper"
+              :style="{ 'background-image': `url(${previewImage})` }"
+              @click="selectImage"></div>
+
               <label for="file" class="label-file">Choisir une image</label>
-              <input @change="uploadImage()" id="file" type="file" class="input-file" accept="image/png, image/jpeg, image/bmp, image/gif" ref="file">
+              <input @change="onFileSelected" id="file" type="file" class="input-file" accept="image/png, image/jpeg, image/bmp, image/gif" ref="file">
               <button class="submit" type="submit">Publier</button>
             </div>
 
-        </form>
+          </form>
        
       </b-col>
 
       <b-col v-for="post in posts" :key="post.id"  col md="8" lg="6" xl="4" fluid="md" class="justify-content-md-center mt-3 publication mx-auto">
 
-        <div class="d-flex justify-content-end" v-if="user || isAdmin">
-          <button class="trash_button ">
+        <div class="d-flex justify-content-end" @click="deleteButton(post.idPublication)" v-if="user.userId == post.Users_idUsers || user.isAdmin">
+          <button  class="trash_button ">
             <b-icon class="trash_icon" icon="trash-fill" aria-hidden="true"></b-icon>
           </button>
         </div>
         
         <div>
           <div class="autor">
-            <b-avatar class="avatarSm" text="GM" size="md"></b-avatar><h4>{{ post.users.firstName }} {{ post.users.lastName }}</h4>
+            <b-avatar variant="info" class="avatarSm" text="GM" size="md"></b-avatar><h4>{{ post.users.firstName }} {{ post.users.lastName }}</h4>
           </div>
 
           <p>{{ post.content }}</p>
@@ -51,7 +57,7 @@
 
 <script>
 import { mapState } from "vuex";
-
+ 
 export default {
   name: 'Home',
 
@@ -59,7 +65,9 @@ export default {
       return {
         content: '',
         posts: [],
-        file: ''
+        file: '',
+        selectedFile: null,
+        previewImage: null
       }
     },
 
@@ -69,27 +77,55 @@ export default {
   
 
   methods: {
-    uploadImage() {
-      
-      let file = this.$refs.file.files[0];
 
-      this.file = file   
+    fetchAllPost() {
+      const token = sessionStorage.getItem("token");
 
+      if (token) {
 
+        const options = {
+            headers: { authorization: `Bearer ${token}` }
+        };
+
+        fetch("http://localhost:3000/api/publi/", options)
+          .then(response => { 
+            if (response.ok) {
+
+              return response.json();
+
+            } else {
+                Promise.reject(response.status);
+            }
+          })
+          .then(publications => {            
+
+            this.posts = publications;
+            
+          })
+          .catch((error) => {
+            alert(error)
+          });
+      }  
+    },
+
+    onFileSelected(event) {
+      this.selectedFile = event.target.files[0];
+      let reader = new FileReader();
+      reader.onload = (e) => {
+        this.previewImage = e.target.result;
+      };
+      reader.readAsDataURL(this.selectedFile);
+      console.log(this.selectedFile);
     },
 
     createPost() {
 
       let data = new FormData();
 
-      data.append('image', this.file);
+      data.append('image', this.selectedFile);
       data.append('content', this.content);
 
       console.log(data);
-
-      // const data = {
-      //   content: this.content
-      // };
 
       const token = sessionStorage.getItem("token");
 
@@ -97,70 +133,70 @@ export default {
                     method: "POST",
                     headers: { "Content-Type": "multipart/formdata", authorization: `Bearer ${token}` },
                     body: data
-                };
-
-      fetch("http://localhost:3000/api/publi/publiCreate", requestOptions)
-      .then(response => { 
-        if (response.ok) {
-            return response.json()         
-        } else {
-            Promise.reject(response.status);
-        }        
-      })
-      .then(newPost => {
-        this.posts.unshift(newPost)
-        console.log(newPost);
-      })
-      .catch((error) => {
-
-        alert(error)
-
-      });
-    },
-  },
-
-  mounted() {
-
-    const token = sessionStorage.getItem("token");
-
-    if (token) {
-
-      const options = {
-          headers: { authorization: `Bearer ${token}` }
       };
 
-      fetch("http://localhost:3000/api/publi/", options)
+      fetch("http://localhost:3000/api/publi/publiCreate", requestOptions)
         .then(response => { 
           if (response.ok) {
-
-            return response.json();
-
+              return response.json()         
           } else {
               Promise.reject(response.status);
-          }
+          }        
         })
-        .then(publications => {              
-          
-          publications.forEach(objet => {
-            this.posts.push(objet)
-          })
-          
+        .then(newPost => {
+          this.posts.unshift(newPost)
+        })
+        .catch((error) => {
+
+          alert(error)
+
+        });
+    },
+
+    deleteButton(id) {
+
+      const token = sessionStorage.getItem("token");
+
+      const requestOptions = {
+                    method: "DELETE",
+                    headers: { "Content-Type": "application/json", authorization: `Bearer ${token}` },
+                };
+
+      fetch("http://localhost:3000/api/publi/" + id, requestOptions)
+        .then(response => { 
+            if (response.ok) {
+              
+              return response.json();
+
+            } else {
+                Promise.reject(response.status);
+            }            
+        })
+        .then(() => {
+          const index = this.posts.findIndex((element) => element.idPublication === id);
+
+          this.posts.splice(index, 1);
         })
         .catch((error) => {
           alert(error)
         });
-    } 
-    
-  }
+    }
+  },
 
+  mounted() {
+    this.fetchAllPost()    
+  }
 }
 </script>
 
 <style>
 
 .publication {
-  background-color: rgba(9, 31, 67, 0.1);
+  background-color: #fff;
   padding: 5px;
+  border-radius: 10px;
+  box-shadow: -1px 3px 4px 0px rgba(0,0,0,0.75);
+
 }
 
 .autor {
@@ -201,6 +237,7 @@ p {
 
 /* Input file */
 .label-file {
+    height: 40px;
     border: 1px solid #091f43;
     border-radius: 10px;
     margin: 10px 0 10px 15px;
@@ -219,6 +256,17 @@ p {
     display: none;
 }
 
+.imagePreviewWrapper {
+        width: 70px;
+        height: 70px;
+        display: block;
+        cursor: pointer;
+        margin: 1em auto;
+        background-size: cover;
+        background-position: center center;
+        position: relative;
+}
+
 /* Trash */
 
 .trash_button {
@@ -229,5 +277,7 @@ p {
 .trash_icon {
   color: #dc3545;
 }
+
+
 
 </style>

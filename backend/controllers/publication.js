@@ -2,10 +2,9 @@ const db = require('../models');
 const publiSchema = require('../middleware/schema/publiSchema');
 const dbPubli = db.publication;
 const dbUser = db.user;
+//const fs = require('fs');
 
 exports.publiAll = (req, res) => {
-
-    //const $idPublication = req.query.idPublication;
 
     dbPubli.findAll({
 
@@ -39,6 +38,8 @@ exports.publiCreate = async(req, res) => {
         const valid = await publiSchema.validateAsync(req.body);
 
         if (valid && tokenUserId) {
+
+            console.log('plouf', req.body);
 
             const publication = {
                 content: req.body.content,
@@ -88,23 +89,9 @@ exports.publiDelete = (req, res) => {
 
     let idMessage = req.params.id;
 
-    dbPubli.findOne({
-            where: { Users_idUsers: dbPubli }
-        })
-        .then((userPost) => {
-            return userPost;
-        })
-        .catch((err) => {
-            res.status(500).send({ message: err.message });
-        });
-
-    console.log("ConsoleLog findPubli: " + userPost);
-
-    console.log("ConsoleLog : " + idMessage);
-
     if (idMessage <= 0) {
         return res.status(404).json({ error: 'Publication non trouvé' });
-    } else if (tokenUserId === userPost) {
+    } else if (tokenUserId) {
 
         dbPubli.destroy({
                 where: {
@@ -122,38 +109,25 @@ exports.publiDelete = (req, res) => {
     } else {
         return res.status(401).json({ error: 'No Match Id' });
     }
-
 };
 
-// dbUser.findOne({
-//     where: { idUsers: tokenUserId }
-// })
-// .then(user => {
+// exports.publiDelete = (req, res) => {
 
-//     console.log("plouf" + user);
+//     const tokenUserId = req.decodedToken.userId;
 
-//     if (!user) {
-//         return res.status(401).json({ error: 'Utilisateur non trouvé' });
-//     }
-//     return dbPubli.findOne({
-//         where: { idPublication: publication },
-//     });
-// })
-// .then((post) => {
-
-//     if (post.Users_idUsers === tokenUserId || user.isAdmin == 1) {
-
-//         return post.destroy({ where: { idPublication: findPost } });
-//     } else {
-//         throw res.status(400).send({ error });
-//     }
-// })
-// .then(() => {
-//     res.status(200).send({ message: "Publication supprimée !" });
-// })
-
-// .catch((err) => {
-// res.status(500).send({
-//     message: err.message
-// });
-// });
+//     dbPubli.findOne({ where: { idPublication: req.params.id } })
+//         .then(post => {
+//             const filename = post.image.split('/images/')[1];
+//             fs.unlink(`images/${filename}`, () => {
+//                 dbPubli.destroy({
+//                         where: {
+//                             idPublication: idMessage,
+//                             Users_idUsers: tokenUserId
+//                         }
+//                     })
+//                     .then(() => res.status(200).json({ message: 'Publication supprimé !' }))
+//                     .catch(error => res.status(400).json({ error }));
+//             });
+//         })
+//         .catch(error => res.status(500).json({ message: error.message }));
+// };

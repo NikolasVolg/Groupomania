@@ -87,7 +87,7 @@ export default {
     justify-content: center;
     border: 1px solid black;
     border-radius: 10px;
-}
+} 
 
 .modifier {
     width: 200px;
@@ -113,8 +113,8 @@ export default {
 
 .infoPerso {
     margin: 0 50px 0 50px;
-    border: 1px solid black;
-    border-radius: 15px;
+    /*border: 1px solid black;
+    border-radius: 15px;*/
     padding: 15px;
 }
 
