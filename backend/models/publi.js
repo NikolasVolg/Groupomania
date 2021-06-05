@@ -22,7 +22,7 @@ module.exports = (sequelize, Sequelize) => {
                 allowNull: false
             },
             image: {
-                type: Sequelize.STRING(64),
+                type: Sequelize.STRING,
                 allowNull: true
             },
         }, {
@@ -36,7 +36,6 @@ module.exports = (sequelize, Sequelize) => {
             //         fields: [{
             //             name: "idPublication"
             //         }],
-
             //     },
             //     {
             //         name: "FK_Users_idUsers",
@@ -44,7 +43,6 @@ module.exports = (sequelize, Sequelize) => {
             //         fields: [{
             //             name: "Users_idUsers"
             //         }],
-
             //     }
             // ]
         }

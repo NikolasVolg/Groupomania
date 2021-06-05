@@ -1,10 +1,11 @@
 const multer = require('multer');
 
 const MIME_TYPES = {
-    'images/jpg': 'jpg',
-    'images/jpeg': 'jpg',
-    'images/png': 'png',
-    'images/bmp': 'bmp'
+    'image/jpg': 'jpg',
+    'image/jpeg': 'jpg',
+    'image/png': 'png',
+    'image/bmp': 'bmp',
+    'image/gif': 'gif',
 };
 
 const storage = multer.diskStorage({

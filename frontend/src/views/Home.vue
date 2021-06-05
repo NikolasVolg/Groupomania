@@ -1,6 +1,6 @@
 <template>
   <div>
-      <b-col  col md="8" lg="6" xl="4" fluid="md" class="justify-content-md-center mt-3 publication mx-auto">
+      <b-col  col md="8" lg="6" xl="4" fluid="md" class="justify-content-md-center mt-3 mx-auto publication">
        
           <form ref="form" @submit.stop.prevent="createPost">
             <b-form-textarea
@@ -15,10 +15,9 @@
               <div
               v-if="previewImage"
               class="imagePreviewWrapper"
-              :style="{ 'background-image': `url(${previewImage})` }"
-              @click="selectImage"></div>
+              :style="{ 'background-image': `url(${previewImage})` }"></div>
 
-              <label for="file" class="label-file">Choisir une image</label>
+              <label for="file" class="label-file">Image/GIF</label>
               <input @change="onFileSelected" id="file" type="file" class="input-file" accept="image/png, image/jpeg, image/bmp, image/gif" ref="file">
               <button class="submit" type="submit">Publier</button>
             </div>
@@ -30,7 +29,7 @@
       <b-col v-for="post in posts" :key="post.id"  col md="8" lg="6" xl="4" fluid="md" class="justify-content-md-center mt-3 publication mx-auto">
 
         <div class="d-flex justify-content-end" @click="deleteButton(post.idPublication)" v-if="user.userId == post.Users_idUsers || user.isAdmin">
-          <button  class="trash_button ">
+          <button  class="trash_button">
             <b-icon class="trash_icon" icon="trash-fill" aria-hidden="true"></b-icon>
           </button>
         </div>
@@ -42,7 +41,7 @@
 
           <p>{{ post.content }}</p>
 
-          <!-- <b-img src="https://picsum.photos/300/300/?image=41" fluid-grow alt=""></b-img> -->
+          <b-img :src="post.image" fluid-grow alt="" class="imagePost"></b-img>
         </div>
 
         <!-- <div class="comment">
@@ -120,18 +119,20 @@ export default {
 
     createPost() {
 
-      let data = new FormData();
+      const data = new FormData();
 
-      data.append('image', this.selectedFile);
-      data.append('content', this.content);
-
-      console.log(data);
+      if (this.selectedFile !== null) {
+        data.append('image', this.selectedFile);
+        data.append('content', this.content);
+      } else {
+        data.append('content', this.content);
+      }
 
       const token = sessionStorage.getItem("token");
 
       const requestOptions = {
                     method: "POST",
-                    headers: { "Content-Type": "multipart/formdata", authorization: `Bearer ${token}` },
+                    headers: { authorization: `Bearer ${token}` },
                     body: data
       };
 
@@ -165,9 +166,7 @@ export default {
       fetch("http://localhost:3000/api/publi/" + id, requestOptions)
         .then(response => { 
             if (response.ok) {
-              
               return response.json();
-
             } else {
                 Promise.reject(response.status);
             }            
@@ -193,10 +192,9 @@ export default {
 
 .publication {
   background-color: #fff;
-  padding: 5px;
+  padding: 15px 5px 5px 5px;
   border-radius: 10px;
   box-shadow: -1px 3px 4px 0px rgba(0,0,0,0.75);
-
 }
 
 .autor {
@@ -222,6 +220,10 @@ h4, h6 {
 p {
   margin-left: 10px;
 }
+
+/* .imagePost {
+
+} */
 
 /* BOUTON */
 .submit {
@@ -277,7 +279,5 @@ p {
 .trash_icon {
   color: #dc3545;
 }
-
-
 
 </style>
