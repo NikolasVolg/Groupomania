@@ -1,56 +1,53 @@
 <template>
   <div>
-      <b-col  col md="8" lg="6" xl="4" fluid="md" class="justify-content-md-center mt-3 mx-auto publication">
-       
-          <form ref="form" @submit.stop.prevent="createPost">
+    <b-col  col md="8" lg="6" xl="4" fluid="md" class="justify-content-md-center mt-3 mx-auto publication">       
+        <form ref="form" @submit.stop.prevent="createPost">
+          <label for="textarea-state"></label>
             <b-form-textarea
               id="textarea-state"
               v-model="content"
               :state="content.length >= 5"
               placeholder="Ecrivez quelque chose. Minimum 5 caractères"
               rows="3">
-            </b-form-textarea>
+            </b-form-textarea>           
 
-            <div class="d-flex justify-content-end">
-              <div
-              v-if="previewImage"
-              class="imagePreviewWrapper"
-              :style="{ 'background-image': `url(${previewImage})` }"></div>
+          <div class="d-flex justify-content-end">
+            <div
+            v-if="previewImage"
+            class="imagePreviewWrapper"
+            :style="{ 'background-image': `url(${previewImage})` }"></div>
 
-              <label for="file" class="label-file">Image/GIF</label>
-              <input @change="onFileSelected" id="file" type="file" class="input-file" accept="image/png, image/jpeg, image/bmp, image/gif" ref="file">
-              <button class="submit" type="submit">Publier</button>
-            </div>
-
-          </form>
-       
-      </b-col>
-
-      <b-col v-for="post in posts" :key="post.id"  col md="8" lg="6" xl="4" fluid="md" class="justify-content-md-center mt-3 publication mx-auto">
-
-        <div class="d-flex justify-content-end" @click="deleteButton(post.idPublication)" v-if="user.userId == post.Users_idUsers || user.isAdmin">
-          <button  class="trash_button">
-            <b-icon class="trash_icon" icon="trash-fill" aria-hidden="true"></b-icon>
-          </button>
-        </div>
-        
-        <div>
-          <div class="autor">
-            <b-avatar variant="info" class="avatarSm" text="GM" size="md"></b-avatar><h4>{{ post.users.firstName }} {{ post.users.lastName }}</h4>
+            <label for="file" class="label-file">Image/GIF</label>
+            <input @change="onFileSelected" id="file" type="file" class="input-file" accept="image/png, image/jpeg, image/bmp, image/gif" ref="file">
+            <button class="submit" type="submit">Publier</button>
           </div>
+        </form>     
+    </b-col>
 
-          <p>{{ post.content }}</p>
+    <b-col v-for="post in posts" :key="post.id"  col md="8" lg="6" xl="4" fluid="md" class="justify-content-md-center mt-3 publication mx-auto">
 
-          <b-img :src="post.image" fluid-grow alt="" class="imagePost"></b-img>
+      <div class="d-flex justify-content-end" @click="deleteButton(post.idPublication)" v-if="user.userId == post.Users_idUsers || user.isAdmin">
+        <button  class="trash_button" type="reset">
+          <b-icon class="trash_icon" icon="trash-fill" aria-hidden="true"></b-icon>
+        </button>
+      </div>
+      
+      <div>
+        <div class="autor">
+          <b-avatar variant="info" class="avatarSm" text="GM" size="md"></b-avatar><h4>{{ post.users.firstName }} {{ post.users.lastName }}</h4>
         </div>
 
-        <!-- <div class="comment">
-          <div class="autor"><b-avatar class="avatarSm" text="GM" size="sm"></b-avatar><h6>{{ firstName }} {{ lastName }}</h6></div>
-          
-          <p>{{ content }}</p>
-        </div> -->
-      </b-col>
+        <p>{{ post.content }}</p>
 
+        <b-img :src="post.image" fluid-grow alt="" class="imagePost"></b-img>
+      </div>
+
+      <!-- <div class="comment">
+        <div class="autor"><b-avatar class="avatarSm" text="GM" size="sm"></b-avatar><h6>{{ firstName }} {{ lastName }}</h6></div>
+        
+        <p>{{ content }}</p>
+      </div> -->
+    </b-col>
   </div>
 </template>
 
@@ -72,9 +69,8 @@ export default {
 
   computed: mapState ({
             user: state => state.user
-    }),
+  }),
   
-
   methods: {
 
     fetchAllPost() {
@@ -145,7 +141,10 @@ export default {
           }        
         })
         .then(newPost => {
-          this.posts.unshift(newPost)
+          this.posts.unshift(newPost);
+          this.content = "";
+          this.selectedFile = null;
+          this.previewImage = null;
         })
         .catch((error) => {
 
@@ -221,10 +220,6 @@ p {
   margin-left: 10px;
 }
 
-/* .imagePost {
-
-} */
-
 /* BOUTON */
 .submit {
     width: 100px;
@@ -246,7 +241,6 @@ p {
     padding: 6px;
     cursor: pointer;
     color: #091f43;
-    font-weight: bold;
 }
 
 .label-file:hover {
@@ -279,5 +273,4 @@ p {
 .trash_icon {
   color: #dc3545;
 }
-
 </style>

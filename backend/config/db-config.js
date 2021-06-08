@@ -1,10 +1,10 @@
 "use strict";
 
 module.exports = {
-    HOST: "localhost",
-    USER: "student",
-    PASSWORD: "student",
-    DB: "groupomania",
+    HOST: process.env.HOST,
+    USER: process.env.USER,
+    PASSWORD: process.env.PASSWORD,
+    DB: process.env.DB,
     dialect: "mysql",
     pool: {
         max: 5,

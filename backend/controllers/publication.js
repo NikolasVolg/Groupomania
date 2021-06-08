@@ -32,8 +32,6 @@ exports.publiAll = (req, res) => {
 
 exports.publiCreate = async(req, res) => {
 
-    console.log(req.file);
-
     try {
 
         const tokenUserId = req.decodedToken.userId;
@@ -46,8 +44,6 @@ exports.publiCreate = async(req, res) => {
                 Users_idUsers: tokenUserId,
                 image: req.file ? `${req.protocol}://${req.get('host')}/images/${req.file.filename}` : null
             };
-
-            console.log(publication);
 
             dbPubli.create(publication)
                 .then((createPost) => {
@@ -92,18 +88,15 @@ exports.publiDelete = (req, res) => {
 
     let idMessage = req.params.id;
 
-    if (idMessage <= 0) {
+    if (!idMessage) {
         return res.status(404).json({ error: 'Publication non trouvé' });
     } else if (tokenUserId) {
 
         dbPubli.findOne({ where: { idPublication: idMessage } })
             .then(Post => {
 
-                const filename = Post.image.split('/images/')[1];
-
-                console.log("filename", filename);
-
-                if (filename) {
+                if (Post.image !== null) {
+                    const filename = Post.image.split('/images/')[1];
                     fs.unlink(`images/${filename}`, () => {
                         dbPubli.destroy({
                                 where: {
@@ -122,7 +115,7 @@ exports.publiDelete = (req, res) => {
                     dbPubli.destroy({
                             where: {
                                 idPublication: idMessage,
-                                Users_idUsers: tokenUserId
+                                //Users_idUsers: tokenUserId
                             }
                         })
                         .then(() => {
@@ -132,7 +125,6 @@ exports.publiDelete = (req, res) => {
                             res.status(500).send({ message: err.message });
                         });
                 }
-
             })
             .catch(error => res.status(501).json({ message: error.message }));
 

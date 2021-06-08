@@ -75,7 +75,6 @@ export default {
 </script>
 
 <style>
-
 .avatar {
     margin-bottom: 20px;
 }
@@ -87,6 +86,8 @@ export default {
     justify-content: center;
     border: 1px solid black;
     border-radius: 10px;
+    background-image: linear-gradient(120deg, #091f43 30%, #d1505a 100%) !important;
+    color: #fff;
 } 
 
 .modifier {
@@ -121,9 +122,4 @@ export default {
 .infoPerso p {
     font-size: 1.2rem;
 }
-
-    
-
-
-
 </style>

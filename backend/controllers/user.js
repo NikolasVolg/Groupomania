@@ -1,7 +1,7 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const userSchema = require('../middleware/schema/userSchema');
-//const passwordSchema = require('../middleware/schema/passwordSchema')
+const passwordSchema = require('../middleware/schema/passwordSchema')
 const db = require('../models');
 const dbUser = db.user;
 //const fs = require('fs');
@@ -12,10 +12,10 @@ exports.signup = async(req, res) => {
 
     try {
 
-        //const validPassword = await passwordSchema.validate(req.body.password);
+        const validPassword = await passwordSchema.validate(req.body.password);
         const valid = await userSchema.validateAsync(req.body);
 
-        if (valid) {
+        if (valid && validPassword) {
             bcrypt.hash(req.body.password, 10)
                 .then(hash => {
                     const user = {
@@ -34,22 +34,16 @@ exports.signup = async(req, res) => {
         };
 
     } catch (error) {
-
         res.status(500).json({ message: error.message });
-
     };
-
 };
 
 exports.login = async(req, res) => {
 
     try {
-
         const valid = await userSchema.validateAsync(req.body);
-
         if (valid) {
             dbUser.findOne({
-
                     where: {
                         email: req.body.email,
                     }
@@ -63,7 +57,10 @@ exports.login = async(req, res) => {
                             if (!valid) {
                                 return res.status(401).json({ error: 'Mot de passe ou email incorrect !' });
                             }
-                            const tokenUser = jwt.sign({ userId: user.idUsers },
+                            const tokenUser = jwt.sign({
+                                    userId: user.idUsers,
+                                    isAdmin: user.isAdmin
+                                },
                                 process.env.SECRET_KEY, { expiresIn: '24h' });
 
                             res.status(200).json({
@@ -72,7 +69,6 @@ exports.login = async(req, res) => {
                                 userId: user.idUsers,
                                 email: req.body.email,
                                 token: tokenUser
-
                             });
                         })
                         .catch(error => res.status(500).json({ error }));
@@ -89,50 +85,52 @@ exports.login = async(req, res) => {
 };
 
 
-
 exports.tokenUser = (req, res) => {
 
-    try {
+    const tokenUserId = req.decodedToken.userId;
 
-        const tokenUserId = req.decodedToken.userId; //renvoie uniquement userId
-
-        if (tokenUserId) {
-
-            //aller chercher les info dans la BDD
-            dbUser.findOne({
-                    where: {
-                        idUsers: tokenUserId,
-                    }
-                })
-                .then(user => {
-                    //si pas d'user, c'est moche
-                    if (!user) {
-                        return res.status(401).json({ error: 'Utilisateur non trouvé !' });
-
-                    } else { //si user trouvé, on renvoie des infos de la BDD
-
-                        res.status(200).json({
-                            firstName: user.firstName,
-                            lastName: user.lastName,
-                            userId: user.idUsers,
-                            email: user.email,
-                            token: req.token,
-                            isAdmin: user.isAdmin
-                        })
-                    };
-                })
-                .catch(error => res.status(500).json({ message: error.message }));
-
-        } else {
-            throw error('input invalid');
-        }
-
-    } catch (error) {
+    if (tokenUserId) {
+        dbUser.findOne({
+                where: {
+                    idUsers: tokenUserId,
+                }
+            })
+            .then(user => {
+                if (!user) {
+                    return res.status(401).json({ error: 'Utilisateur non trouvé !' });
+                } else {
+                    res.status(200).json({
+                        firstName: user.firstName,
+                        lastName: user.lastName,
+                        userId: user.idUsers,
+                        email: user.email,
+                        token: req.token,
+                        isAdmin: user.isAdmin
+                    })
+                };
+            })
+            .catch(error => res.status(500).json({ message: error.message }));
+    } else {
         res.status(400).json({ error });
-    }
+    };
 };
 
-//si du temps séparer modif user et modif password !!!!
+exports.deleteUser = (req, res) => {
+
+    const tokenUserId = req.decodedToken.userId;
+
+    dbUser.findOne({ where: { idUsers: tokenUserId } })
+
+    .then(() => {
+            dbUser.destroy({
+                    where: { idUsers: tokenUserId },
+                })
+                .then(() => res.status(200).json({ message: 'Utilisateur supprimé !' }))
+                .catch(error => res.status(400).json({ message: error.message }));
+        })
+        .catch(error => res.status(501).json({ message: error.message }));
+};
+
 
 // exports.modifyUser = async(req, res) => {
 
@@ -178,24 +176,3 @@ exports.tokenUser = (req, res) => {
 //     };
 
 // };
-
-
-
-exports.deleteUser = (req, res) => {
-
-    const tokenUserId = req.decodedToken.userId;
-
-    dbUser.findOne({ where: { idUsers: tokenUserId } })
-
-    .then(() => {
-            // const filename = user.imageUrl.split('/images/')[1];
-            // fs.unlink(`images/${filename}`, () => {
-            dbUser.destroy({
-                    where: { idUsers: tokenUserId },
-                })
-                .then(() => res.status(200).json({ message: 'Utilisateur supprimé !' }))
-                .catch(error => res.status(400).json({ message: error.message }));
-            //});
-        })
-        .catch(error => res.status(501).json({ message: error.message }));
-};

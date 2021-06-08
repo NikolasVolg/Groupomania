@@ -1,40 +1,40 @@
 <template>
   
-        <form ref="form" @submit.stop.prevent="logIn">
+    <form ref="form" @submit.stop.prevent="logIn">
 
-                <b-form-group           
-                    label="Email"
-                    label-for="emailInput"
-                    invalid-feedback="Email is required">
+        <b-form-group           
+            label="Email"
+            label-for="emailInput"
+            invalid-feedback="Email is required">
 
-                    <b-form-input
-                        id="emailInput"
-                        type="email"
-                        placeholder="Entrez votre email"
-                        v-model="email"
-                        required>
-                    </b-form-input>
-                </b-form-group>
+            <b-form-input
+                id="emailInput"
+                type="email"
+                placeholder="Entrez votre email"
+                v-model="email"
+                required>
+            </b-form-input>
+        </b-form-group>
 
-                <b-form-group
-                    label="Mot de passe"
-                    label-for="passwordInput"
-                    invalid-feedback="Password is required">
+        <b-form-group
+            label="Mot de passe"
+            label-for="passwordInput"
+            invalid-feedback="Password is required">
 
-                    <b-form-input
-                        type="password"
-                        id="passwordInput"
-                        placeholder="Entrez votre mot de passe"
-                        v-model="password"
-                        required>
-                    </b-form-input>
-                </b-form-group>
+            <b-form-input
+                type="password"
+                id="passwordInput"
+                placeholder="Entrez votre mot de passe"
+                v-model="password"
+                required>
+            </b-form-input>
+        </b-form-group>
 
-                <div class="d-flex justify-content-end align-self-center pl-1 pr-1">
-                    <b-button class="m-1" variant="success" type="submit">Se connecter</b-button>
-                </div>
+        <div class="d-flex justify-content-end align-self-center pl-1 pr-1">
+            <button class="connexBtn" type="submit">Se connecter</button> 
+        </div>
 
-        </form>
+    </form>
 
 </template>
 
@@ -44,7 +44,6 @@ export default {
     name: "Login",
 
     data() {
-
         return {
             email: "",
             password: ""
@@ -58,7 +57,6 @@ export default {
                 email: this.email,
                 password: this.password
             };
-
 
             const requestOptions = {
                     method: "POST",
@@ -80,7 +78,8 @@ export default {
                         
                     this.$store.dispatch("login", user);
                     this.$router.push("/");
-                        
+                    this.email = "";
+                    this.password = "";                        
                 })
                     
                 .catch((error) => {

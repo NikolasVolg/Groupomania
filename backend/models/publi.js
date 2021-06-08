@@ -29,22 +29,6 @@ module.exports = (sequelize, Sequelize) => {
             sequelize,
             tableName: "publication",
             timestamps: false,
-            // indexes: [{
-            //         name: "PRIMARY",
-            //         unique: true,
-            //         using: "BTREE",
-            //         fields: [{
-            //             name: "idPublication"
-            //         }],
-            //     },
-            //     {
-            //         name: "FK_Users_idUsers",
-            //         using: "BTREE",
-            //         fields: [{
-            //             name: "Users_idUsers"
-            //         }],
-            //     }
-            // ]
         }
     );
     return Publi;

@@ -33,29 +33,6 @@ module.exports = (sequelize, Sequelize) => {
             sequelize,
             tableName: "comment",
             timestamps: false,
-            // indexes: [{
-            //         name: "PRIMARY",
-            //         unique: true,
-            //         using: "BTREE",
-            //         fields: [{
-            //             name: "idComments"
-            //         }],
-            //     },
-            //     {
-            //         name: "FK_Publication_idPublication",
-            //         using: "BTREE",
-            //         fields: [{
-            //             name: "Publication_idPublication"
-            //         }],
-            //     },
-            //     {
-            //         name: "FK_Users_idUsers",
-            //         using: "BTREE",
-            //         fields: [{
-            //             name: "Users_idUsers"
-            //         }],
-            //     }
-            // ]
         }
     );
     return Comment;
