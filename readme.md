@@ -1,10 +1,10 @@
-#Groupomania - P7 - OpenClassRooms
+# Groupomania - P7 - OpenClassRooms
 
 Dernier projet de la formation Dev Web Fullstack JS.
 Création d'un réseau social d'entreprise.
 
 
-###Objectifs demandés
+### Objectifs demandés
 
 * Site responsive et création de compte simple et rapide
 
@@ -16,16 +16,16 @@ Création d'un réseau social d'entreprise.
 
 * Un administrateur poru modérer les contenus
 
-###Technologies utilisées
+### Technologies utilisées
 
-#####Frontend
+##### Frontend
 
 * VueJS 2, Vuex, vue-router 
 
-#####Backend
+##### Backend
 
 * NodeJS, Express, Sequelize
 
-#####Base de Données
+##### Base de Données
 
 * MySQL (demandé par le client)
