@@ -13,7 +13,6 @@
                     
                     <!-- ONGLET INSCRIPTION -->
                     <b-tab title="Créer un compte" :title-link-class="linkClass(1)">
-
                         <Signup/>                            
                     </b-tab>
 

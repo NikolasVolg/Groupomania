@@ -1,9 +1,8 @@
 const express = require('express');
 const path = require('path');
 const helmet = require("helmet");
-const db = require("./models");
-
 require('dotenv').config();
+const db = require("./models");
 
 const app = express();
 const userRoutes = require('./routes/users');
@@ -19,9 +18,6 @@ app.use((req, res, next) => {
 });
 
 app.use(express.json());
-// for parsing multipart/form-data
-// app.use(upload.array()); 
-// app.use(express.static('public'));
 db.sequelize.sync();
 
 app.use('/images', express.static(path.join(__dirname, 'images')));

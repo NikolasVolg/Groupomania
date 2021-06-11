@@ -1,10 +1,10 @@
 "use strict";
 
 module.exports = {
-    HOST: process.env.HOST,
-    USER: process.env.USER,
-    PASSWORD: process.env.PASSWORD,
-    DB: process.env.DB,
+    HOST: process.env.GMHOST,
+    USER: process.env.GMUSER,
+    PASSWORD: process.env.GMPASSWORD,
+    DB: process.env.GMDB,
     dialect: "mysql",
     pool: {
         max: 5,

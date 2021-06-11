@@ -1,10 +1,8 @@
 <template>
     <div>
-
         <b-container
         class="justify-content-md-center mt-5 profil"
         style="max-width: 20rem;">
-
 
                 <div class="avatar mx-auto">
                     <b-avatar text="GM" size="200px"></b-avatar>
@@ -21,8 +19,7 @@
 
                 <!-- <button to="/modifyProfil" class="modifier mx-auto">Modifier</button> -->
                 <button class="delete mx-auto" @click="supprimer">Supprimer mon compte</button>
-    
-    
+       
         </b-container>
 
     </div>
@@ -31,9 +28,9 @@
 <script>
 
 import { mapState } from "vuex"
+import { fetchDeleteAccount } from '../api/user';
 
 export default {
-
     name: 'Profil',
 
     computed: mapState ({
@@ -43,33 +40,16 @@ export default {
     methods: {
         supprimer() {
 
-            const token = sessionStorage.getItem("token");
-
-            const options = {
-                method: 'DELETE',
-                headers: { authorization: `bearer ${token}` }
-            };
-
-            fetch("http://localhost:3000/api/auth/users/deleteUser", options)
-            .then(response => {
-                if (response.ok) {
-
-                    return response.json();
-
-                } else {
-                    Promise.reject(response.status);
-                }
-            })
-            .then(() => {
-                this.$router.push("connect")
-            })
-            .catch((e) => {
-                this.$router.push("/connect");
-                console.error(e);
-            });
+            fetchDeleteAccount()
+                .then(() => {
+                    this.$router.push("connect")
+                })
+                .catch((e) => {
+                    this.$router.push("/connect");
+                    console.error(e);
+                });
         }
-    }
-    
+    }    
 };
 
 </script>

@@ -39,6 +39,7 @@
 </template>
 
 <script>
+import { fetchLogin } from '../api/user';
 
 export default {
     name: "Login",
@@ -58,34 +59,15 @@ export default {
                 password: this.password
             };
 
-            const requestOptions = {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(contact)
-            };
-
-            fetch("http://localhost:3000/api/auth/login", requestOptions)
-                .then(response => { 
-                    if (response.ok) {
-                
-                        return response.json()
-                            
-                    } else {
-                        Promise.reject(response.status);
-                    }
-                })
-                .then((user) => {
-                        
+            fetchLogin(contact)
+                .then((user) => {                        
                     this.$store.dispatch("login", user);
                     this.$router.push("/");
                     this.email = "";
                     this.password = "";                        
-                })
-                    
+                })                    
                 .catch((error) => {
-
                     alert(error)
-
                 });
         }
     }

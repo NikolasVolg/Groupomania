@@ -67,6 +67,7 @@
 </template>
 
 <script>
+import { fetchSignup } from '../api/user';
 
 export default {
 
@@ -81,8 +82,7 @@ export default {
         }
     },
 
-    methods: {
-        
+    methods: {        
         signUp() { 
 
             const contact = {
@@ -92,31 +92,17 @@ export default {
                 password: this.password
             };
 
-                const requestOptions = {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(contact)
-                };
-
-                fetch("http://localhost:3000/api/auth/signup", requestOptions)
-
-                    .then(response => { 
-                        
-                        if (response.ok) {
-                            
-                            return response.json();
-
-                        } else {
-                            Promise.reject(response.status);
-                        }
-                    })
-                    .then(() => {
-                        window.alert("vous êtes bien enregistré. Vous pouvez vous connecté.");
-                        this.lastName = "";
-                        this.firstName = "";
-                        this.email = "";
-                        this.password = "";
-                    });
+        fetchSignup(contact)
+            .then(() => {
+                this.lastName = "";
+                this.firstName = "";
+                this.email = "";
+                this.password = "";
+                window.alert("vous êtes bien enregistré. Vous pouvez vous connecté.");
+            })
+            .catch((error) => {
+                alert(error.message)
+            });
         }
     }
 }

@@ -37,7 +37,8 @@ const routes = [{
         path: '/connect',
         name: 'Connect',
         component: Connect
-    }
+    },
+
 
 ];
 

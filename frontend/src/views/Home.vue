@@ -24,39 +24,24 @@
         </form>     
     </b-col>
 
-    <b-col v-for="post in posts" :key="post.id"  col md="8" lg="6" xl="4" fluid="md" class="justify-content-md-center mt-3 publication mx-auto">
-
-      <div class="d-flex justify-content-end" @click="deleteButton(post.idPublication)" v-if="user.userId == post.Users_idUsers || user.isAdmin">
-        <button  class="trash_button" type="reset">
-          <b-icon class="trash_icon" icon="trash-fill" aria-hidden="true"></b-icon>
-        </button>
-      </div>
-      
-      <div>
-        <div class="autor">
-          <b-avatar variant="info" class="avatarSm" text="GM" size="md"></b-avatar><h4>{{ post.users.firstName }} {{ post.users.lastName }}</h4>
-        </div>
-
-        <p>{{ post.content }}</p>
-
-        <b-img :src="post.image" fluid-grow alt="" class="imagePost"></b-img>
-      </div>
-
+    <Post v-for="post in posts" :key="post.id" :post="post" @delete="deleteButton($event)"/>
+    
       <!-- <div class="comment">
         <div class="autor"><b-avatar class="avatarSm" text="GM" size="sm"></b-avatar><h6>{{ firstName }} {{ lastName }}</h6></div>
         
         <p>{{ content }}</p>
       </div> -->
-    </b-col>
+
   </div>
 </template>
 
 <script>
+import { fetchAllPost, fetchCreatePost, fetchDeletePost } from '../api/publication';
+import Post from "../components/Post.vue";
 import { mapState } from "vuex";
  
 export default {
   name: 'Home',
-
   data() {
       return {
         content: '',
@@ -66,41 +51,24 @@ export default {
         previewImage: null
       }
     },
-
   computed: mapState ({
             user: state => state.user
   }),
+
+  components: {
+    Post
+  },
   
   methods: {
-
-    fetchAllPost() {
-      const token = sessionStorage.getItem("token");
-
-      if (token) {
-
-        const options = {
-            headers: { authorization: `Bearer ${token}` }
-        };
-
-        fetch("http://localhost:3000/api/publi/", options)
-          .then(response => { 
-            if (response.ok) {
-
-              return response.json();
-
-            } else {
-                Promise.reject(response.status);
-            }
-          })
-          .then(publications => {            
-
+    
+    allPost() {
+      fetchAllPost() 
+        .then(publications => {
             this.posts = publications;
-            
-          })
-          .catch((error) => {
+        })
+        .catch((error) => {
             alert(error)
-          });
-      }  
+        });
     },
 
     onFileSelected(event) {
@@ -123,56 +91,25 @@ export default {
       } else {
         data.append('content', this.content);
       }
-
-      const token = sessionStorage.getItem("token");
-
-      const requestOptions = {
-                    method: "POST",
-                    headers: { authorization: `Bearer ${token}` },
-                    body: data
-      };
-
-      fetch("http://localhost:3000/api/publi/publiCreate", requestOptions)
-        .then(response => { 
-          if (response.ok) {
-              return response.json()         
-          } else {
-              Promise.reject(response.status);
-          }        
-        })
+      
+      fetchCreatePost(data)
         .then(newPost => {
+          console.log(newPost);
           this.posts.unshift(newPost);
           this.content = "";
           this.selectedFile = null;
           this.previewImage = null;
         })
         .catch((error) => {
-
           alert(error)
-
         });
     },
 
     deleteButton(id) {
 
-      const token = sessionStorage.getItem("token");
-
-      const requestOptions = {
-                    method: "DELETE",
-                    headers: { "Content-Type": "application/json", authorization: `Bearer ${token}` },
-                };
-
-      fetch("http://localhost:3000/api/publi/" + id, requestOptions)
-        .then(response => { 
-            if (response.ok) {
-              return response.json();
-            } else {
-                Promise.reject(response.status);
-            }            
-        })
+      fetchDeletePost(id)
         .then(() => {
           const index = this.posts.findIndex((element) => element.idPublication === id);
-
           this.posts.splice(index, 1);
         })
         .catch((error) => {
@@ -182,8 +119,9 @@ export default {
   },
 
   mounted() {
-    this.fetchAllPost()    
+    this.allPost()    
   }
+
 }
 </script>
 
