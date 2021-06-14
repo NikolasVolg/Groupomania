@@ -12,9 +12,9 @@ Création d'un réseau social d'entreprise.
 
 * Accès à un forum de partage de texte et/ou de contenus multimédias
 
-* Publications dasn l'ordre descendant
+* Publications dans l'ordre descendant
 
-* Un administrateur poru modérer les contenus
+* Un administrateur pour modérer les contenus
 
 ### Technologies utilisées
 
@@ -62,5 +62,28 @@ Si votre serveur est déjà lancé, relancez-le sinon taper la commande `nodemon
 
 #### Création d'un administrateur 
 
-Pour cela, les serveurs frotn et back doivent être lancé et vous devez être connecté au site via votre navigateur. Créer un utilisateur. une fois cette utilisateur créé connectez-vous à votre serveur MySQL et éxecutez cette commande ```UPDATE `USER` SET /isAdmin` = '1' WHERE `id` = 'saisissez l'id de l'utilisateur devant être administrateur'```
+Pour cela, les serveurs frotn et back doivent être lancé et vous devez être connecté au site via votre navigateur. Créer un utilisateur. une fois cette utilisateur créé connectez-vous à votre serveur MySQL et éxecutez cette commande ```UPDATE `USER` SET `isAdmin` = '1' WHERE `id` = 'saisissez l'id de l'utilisateur devant être administrateur'```
 
+## Utilisation du projet
+
+Une fois les serveurs lancés rendez-vous sur l'URL que vous indiquera votre terminal au lancement du serveur VueJS.
+
+Pour s'inscrire veuillez renseignez tous les champs :
+
+* Nom et prénom (entre 2 et 24 caractères)
+* Une adresse mail valide (.com . net .fr)
+* Un mot de passe (entre 8 à 36 caractères, au moins une majuscule, une minuscule et 1 chiffres. Symbole et espace interdit)
+
+##### Un fois connecté
+
+Vous pourrez :
+
+* Voir l'ensemble des publications texte ou multimédia
+* Publier du texte ou un une image/GIF
+* Supprimer votre/vos puiblications (l'administrateur pourra également supprimer vos publications)
+* Voir votre profil
+* Supprimer votre profil
+* Votre session est persistante (via sessionStorage) jusqu'à fermeture de l'onglet ou de votre navigateur 
+
+
+#### Bonne navigation 
