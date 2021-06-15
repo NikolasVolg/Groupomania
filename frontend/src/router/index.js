@@ -25,21 +25,11 @@ const routes = [{
             required: true
         }
     },
-    // {
-    //     path: '/modifyProfil',
-    //     name: 'ModifyProfil',
-    //     component: ModifyProfil,
-    //     meta: {
-    //         required: true
-    //     }
-    // },
     {
         path: '/connect',
         name: 'Connect',
         component: Connect
     },
-
-
 ];
 
 const router = new VueRouter({

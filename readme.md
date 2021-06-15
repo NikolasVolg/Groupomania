@@ -44,6 +44,8 @@ puis
 
 #### Backend 
 
+Dans le dossier backend, créez un dossier que vous nommerez *images* afin de stockez le contenu multimédia
+
 Un fichier *.env_Prod* est fourni, suivez les intructions et renommez-le *.env*.
 
 Ouvrez le dossier *backend* dans votre terminal puis éxecutez la commande :
@@ -86,4 +88,4 @@ Vous pourrez :
 * Votre session est persistante (via sessionStorage) jusqu'à fermeture de l'onglet ou de votre navigateur 
 
 
-#### Bonne navigation 
+#### Bonne navigation
