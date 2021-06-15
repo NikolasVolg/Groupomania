@@ -20,11 +20,11 @@ Création d'un réseau social d'entreprise.
 
 ##### Frontend
 
-* VueJS 2, Vuex, vue-router 
+* VueJS 2.6, Vuex 3.4, vue-router 3.2 et Bootstrap-Vue 2.21
 
 ##### Backend
 
-* NodeJS, Express, Sequelize
+* NodeJS 12, Express 4, Sequelize 6.6
 
 ##### Base de Données
 
