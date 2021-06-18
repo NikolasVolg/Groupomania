@@ -64,7 +64,7 @@ Si votre serveur est déjà lancé, relancez-le sinon taper la commande `nodemon
 
 #### Création d'un administrateur 
 
-Pour cela, les serveurs frotn et back doivent être lancé et vous devez être connecté au site via votre navigateur. Créer un utilisateur. une fois cette utilisateur créé connectez-vous à votre serveur MySQL et éxecutez cette commande ```UPDATE `USER` SET `isAdmin` = '1' WHERE `id` = 'saisissez l'id de l'utilisateur devant être administrateur'```
+Pour cela, les serveurs front et back doivent être lancé et vous devez être connecté au site via votre navigateur. Créer un utilisateur. une fois cette utilisateur créé connectez-vous à votre serveur MySQL et éxecutez cette commande ```UPDATE `USER` SET `isAdmin` = '1' WHERE `id` = 'saisissez l'id de l'utilisateur devant être administrateur'```
 
 ## Utilisation du projet
 
@@ -76,7 +76,7 @@ Pour s'inscrire veuillez renseignez tous les champs :
 * Une adresse mail valide (.com . net .fr)
 * Un mot de passe (entre 8 à 36 caractères, au moins une majuscule, une minuscule et 1 chiffres. Symbole et espace interdit)
 
-##### Un fois connecté
+#### Un fois connecté
 
 Vous pourrez :
 

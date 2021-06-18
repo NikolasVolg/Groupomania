@@ -10,10 +10,10 @@
                 </div>
 
                 <div class="infoPerso  mx-auto">
-                    <p>Prénom : {{ user.firstName }}</p>
-                    <p>Nom : {{ user.lastName }}</p>
+                    <p><span>Prénom :</span> {{ user.firstName }}</p>
+                    <p><span>Nom :</span> {{ user.lastName }}</p>
 
-                    <p>Email : {{ user.email }}</p>
+                    <p><span>Email :</span> {{ user.email }}</p>
 
                 </div>
 
@@ -55,6 +55,9 @@ export default {
 </script>
 
 <style>
+span {
+    font-weight: 700;
+}
 .avatar {
     margin-bottom: 20px;
 }

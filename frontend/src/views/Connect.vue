@@ -72,10 +72,6 @@ label {
     font-size: 1.2rem;
 }
 
-.directiveMDP {
- font-size: 0.9rem;
-}
-
 .connexBtn {
     background: none;
     margin-top: 15px;

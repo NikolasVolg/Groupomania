@@ -1,7 +1,7 @@
 <template>
   <div>
-    <b-col  col md="8" lg="6" xl="4" fluid="md" class="justify-content-md-center mt-3 mx-auto publication">       
-        <form ref="form" @submit.stop.prevent="createPost">
+    <b-col  col md="8" lg="6" xl="4" fluid="md" class="justify-content-md-center mt-3 mx-auto publication">
+        <form id="form" ref="form" @submit.stop.prevent="createPost">
           <label for="textarea-state"></label>
             <b-form-textarea
               id="textarea-state"
@@ -9,7 +9,8 @@
               :state="content.length >= 5"
               placeholder="Ecrivez quelque chose. Minimum 5 caractères"
               rows="3">
-            </b-form-textarea>           
+            </b-form-textarea>
+                       
 
           <div class="d-flex justify-content-end">
             <div
@@ -84,6 +85,7 @@ export default {
     createPost() {
 
       const data = new FormData();
+      const contentMini = this.content;
 
       if (this.selectedFile !== null) {
         data.append('image', this.selectedFile);
@@ -91,8 +93,9 @@ export default {
       } else {
         data.append('content', this.content);
       }
-      
-      fetchCreatePost(data)
+
+      if (contentMini >= 5) {
+        fetchCreatePost(data)
         .then(newPost => {
           console.log(newPost);
           this.posts.unshift(newPost);
@@ -103,6 +106,11 @@ export default {
         .catch((error) => {
           alert(error)
         });
+      } else {
+        alert("Votre publication doit contenir au moins 5 caractères !")
+      }
+      
+      
     },
 
     deleteButton(id) {
